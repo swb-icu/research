@@ -50,10 +50,23 @@
   }
   .subcrit.met{border-left-color:var(--green); background:var(--green-bg);}
   .subcrit-label{font-size:0.8rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.03em; margin-bottom:6px;}
+  .skip-row{margin-top:10px;}
+  .skip-row label{font-size:0.8rem; color:var(--muted); font-weight:400; cursor:pointer;}
+  .skip-row input[type=checkbox]{margin-right:6px; vertical-align:middle;}
+  .calc-toggle{margin-top:6px;}
+  .link-btn{
+    background:none; border:none; color:var(--blue); font-size:0.8rem; font-weight:600;
+    padding:0; cursor:pointer; text-decoration:underline;
+  }
+  #baseline-calc-panel{
+    margin-top:10px; padding:12px 14px; background:#f4f6f8; border:1px solid var(--border);
+    border-radius:6px;
+  }
   .or-divider{
     text-align:center; font-size:0.75rem; font-weight:700; color:var(--muted);
     margin:4px 0 10px 0; letter-spacing:0.08em;
   }
+  .or-divider.fail{color:var(--red);}
   .excl-item{
     display:flex; align-items:flex-start; gap:10px; padding:9px 0;
     border-bottom:1px solid #eef1f4;
@@ -72,10 +85,13 @@
     background:var(--red-bg); border-radius:4px; padding:2px 6px; margin-left:8px;
   }
   #result{
-    position:sticky; bottom:0; margin:24px auto 0 auto; max-width:840px;
-    border-radius:8px; padding:18px 24px; font-size:1rem; box-shadow:0 -4px 14px rgba(0,0,0,0.12);
+    margin:24px auto 0 auto; max-width:840px;
+    border-radius:8px; padding:20px 24px; font-size:1rem; box-shadow:0 2px 10px rgba(0,0,0,0.08);
+    border-width:3px !important; scroll-margin-top:20px;
   }
-  #result h3{margin:0 0 6px 0; font-size:1.15rem;}
+  #result h3{margin:0 0 6px 0; font-size:1.25rem;}
+  #result.flash{animation:flashResult 1s ease-in-out;}
+  @keyframes flashResult{0%,100%{box-shadow:0 2px 10px rgba(0,0,0,0.08);} 50%{box-shadow:0 0 0 6px rgba(11,83,148,0.25);}}
   #result ul{margin:8px 0 0 0; padding-left:20px; font-size:0.85rem;}
   .status-eligible{background:var(--green-bg); border:2px solid var(--green); color:#0d3d1a;}
   .status-ineligible{background:var(--red-bg); border:2px solid var(--red); color:#5c0000;}
@@ -85,6 +101,12 @@
     padding:9px 18px; font-size:0.85rem; font-weight:600; cursor:pointer;
   }
   button.secondary{background:#fff; color:var(--blue); border:1px solid var(--blue);}
+  .sex-toggle{display:flex; gap:8px;}
+  .sex-toggle button{
+    flex:1; background:#fff; color:var(--blue); border:1px solid var(--blue);
+    border-radius:6px; padding:8px 10px; font-size:0.85rem; font-weight:600; cursor:pointer;
+  }
+  .sex-toggle button.active{background:var(--blue); color:#fff;}
   .btn-row{display:flex; gap:10px; margin-top:10px;}
   footer{
     max-width:840px; margin:20px auto 0 auto; padding:0 24px; color:var(--muted);
@@ -96,6 +118,21 @@
   }
   .criterion-status.pass{background:var(--green);}
   .criterion-status.fail{background:var(--red);}
+  .step-banner{
+    font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em;
+    color:var(--blue); margin:0 0 12px 4px;
+  }
+  .gate-card{
+    text-align:center; padding:16px 24px;
+  }
+  .gate-card.status-ineligible{border-color:var(--red);}
+  .card.pass{border-color:var(--green); background:var(--green-bg);}
+  /* Note: no .card.fail rule — a "not met" criterion is a plain statement (see .crit-msg.fail
+     below), not a full-card colour change. Colour is reserved for the final verdict panel. */
+  .crit-msg{margin:10px 0 0 0; font-size:0.85rem; font-weight:600;}
+  .crit-msg.pass{color:#0d3d1a;}
+  .crit-msg.fail{color:#5c0000;}
+  .crit-msg.pending{color:var(--muted); font-weight:400;}
 </style>
 </head>
 <body>
@@ -107,17 +144,15 @@
 
 <div class="disclaimer">
   <strong>Support aid only — not a substitute for the trial Screening Log or PI sign-off.</strong>
-  This tool implements the inclusion/exclusion criteria from MOSAICC Protocol v6.0 (20FEB2025) as written.
-  It does not connect to the trial database, does not record or transmit any data, and does not replace
-  clinical judgement. Confirm any eligibility decision against the current approved protocol version and
-  discuss with your PI/research team before enrolment. Baseline creatinine must be entered manually — the
-  protocol's own "provided calculator" for estimating baseline creatinine is not yet integrated into this tool.
 </div>
 
 <div class="wrap">
 
+  <div class="step-banner" id="step1-banner">Step 1 of 2 — Inclusion criteria</div>
+  <div id="step1">
+
   <!-- INCLUSION 1: AGE -->
-  <div class="card">
+  <div class="card" id="card-ind1">
     <h2><span class="criterion-status" id="ind1-dot">1</span> Adult</h2>
     <p class="sub">Inclusion criterion 1: aged ≥18 years</p>
     <div class="row">
@@ -126,10 +161,11 @@
         <input type="number" id="age" min="0" step="1" oninput="evaluate()">
       </div>
     </div>
+    <p class="crit-msg" id="ind1-msg"></p>
   </div>
 
   <!-- INCLUSION 2: METABOLIC ACIDOSIS -->
-  <div class="card">
+  <div class="card" id="card-ind2">
     <h2><span class="criterion-status" id="ind2-dot">2</span> Metabolic acidosis</h2>
     <p class="sub">Inclusion criterion 2: arterial pH &lt;7.30 AND PaCO₂ &lt;6.5 kPa</p>
     <div class="row">
@@ -143,10 +179,11 @@
         <span class="hint">Convert from mmHg by dividing by 7.5 if needed</span>
       </div>
     </div>
+    <p class="crit-msg" id="ind2-msg"></p>
   </div>
 
   <!-- INCLUSION 3: AKI KDIGO 2/3 -->
-  <div class="card">
+  <div class="card" id="card-ind3">
     <h2><span class="criterion-status" id="ind3-dot">3</span> AKI — KDIGO stage 2 or 3</h2>
     <p class="sub">Inclusion criterion 3: <strong>any one</strong> of the three criteria below</p>
 
@@ -154,7 +191,25 @@
       <div class="field">
         <label for="baselineCr">Baseline serum creatinine (µmol/L)</label>
         <input type="number" id="baselineCr" step="1" oninput="evaluate()">
-        <span class="hint">Per protocol: use pre-hospitalisation value within 365 days if available (closest to admission if several); otherwise the lowest value from this admission prior to acute illness onset. If neither exists, enter your trust's own estimated baseline — the MOSAICC "provided calculator" is not yet built into this tool.</span>
+        <span class="hint">Per protocol: use pre-hospitalisation value within 365 days if available (closest to admission if several); otherwise the lowest value from this admission prior to acute illness onset. If neither exists, use the estimator below.</span>
+        <div class="calc-toggle">
+          <button type="button" class="link-btn" onclick="toggleBaselineCalc()" id="baseline-calc-toggle-btn">No true baseline available? Estimate it →</button>
+        </div>
+        <div id="baseline-calc-panel" style="display:none;">
+          <div class="row" style="margin-top:10px; margin-bottom:6px;">
+            <div class="field">
+              <label>Sex</label>
+              <div class="sex-toggle" role="group" aria-label="Sex">
+                <button type="button" id="sexBtnM" onclick="selectSex(1)">Male</button>
+                <button type="button" id="sexBtnF" onclick="selectSex(2)">Female</button>
+              </div>
+              <input type="hidden" id="calcSex" value="">
+              <span class="hint">Uses the age already entered in Criterion 1 above.</span>
+            </div>
+          </div>
+          <p class="crit-msg pending" id="baseline-calc-result"></p>
+          <button type="button" class="secondary" onclick="useBaselineEstimate()" id="use-estimate-btn" disabled>Use this estimate</button>
+        </div>
       </div>
       <div class="field">
         <label for="currentCr">Current serum creatinine (µmol/L)</label>
@@ -168,42 +223,80 @@
       <span id="crit3a-val" style="color:var(--muted); font-size:0.82rem;"></span>
     </div>
 
-    <div class="or-divider">OR</div>
+    <div id="crit3b-section" style="display:none;">
+      <div class="or-divider" id="crit3b-divider">Criterion A not met — checking Criterion B</div>
 
-    <div class="subcrit" id="crit3b">
-      <div class="subcrit-label">Criterion B</div>
-      Current creatinine ≥354 µmol/L, AND (rise ≥27 µmol/L within 48h OR current ≥1.5 × baseline)
-      <div class="row" style="margin-top:10px;">
-        <div class="field">
-          <label for="cr48h">Serum creatinine 48h prior (µmol/L) — optional, only for the "rise" route</label>
-          <input type="number" id="cr48h" step="1" oninput="evaluate()">
+      <div class="subcrit" id="crit3b">
+        <div class="subcrit-label">Criterion B</div>
+        Current creatinine ≥354 µmol/L, AND (rise ≥27 µmol/L within 48h OR current ≥1.5 × baseline)
+        <div class="row" style="margin-top:10px;">
+          <div class="field">
+            <label for="cr48h">Serum creatinine 48h prior (µmol/L) — optional, only for the "rise" route</label>
+            <input type="number" id="cr48h" step="1" oninput="evaluate()">
+          </div>
+        </div>
+        <span id="crit3b-val" style="color:var(--muted); font-size:0.82rem;"></span>
+        <div class="skip-row">
+          <label><input type="checkbox" id="skipB" onchange="evaluate()"> No data available for this route (48h-prior or baseline creatinine)</label>
         </div>
       </div>
-      <span id="crit3b-val" style="color:var(--muted); font-size:0.82rem;"></span>
     </div>
 
-    <div class="or-divider">OR</div>
+    <div id="crit3c-section" style="display:none;">
+      <div class="or-divider" id="crit3c-divider">Criterion B not met — checking Criterion C</div>
 
-    <div class="subcrit" id="crit3c">
-      <div class="subcrit-label">Criterion C</div>
-      Urine output &lt;0.5 ml/kg/h for ≥12 hours
-      <div class="row" style="margin-top:10px;">
-        <div class="field">
-          <label for="weight">Body weight (kg)</label>
-          <input type="number" id="weight" step="0.1" oninput="evaluate()">
+      <div class="subcrit" id="crit3c">
+        <div class="subcrit-label">Criterion C</div>
+        Urine output &lt;0.5 ml/kg/h for ≥12 hours
+        <div class="row" style="margin-top:10px;">
+          <div class="field">
+            <label for="weight">Body weight (kg)</label>
+            <input type="number" id="weight" step="0.1" oninput="evaluate()">
+            <span class="hint">Use actual body weight. If not available, use best estimate.</span>
+          </div>
+          <div class="field">
+            <label for="uoOutput">Urine output over period (ml)</label>
+            <input type="number" id="uoOutput" step="1" oninput="evaluate()">
+          </div>
+          <div class="field">
+            <label for="uoHours">Duration (hours)</label>
+            <input type="number" id="uoHours" step="0.5" oninput="evaluate()">
+            <span class="hint">Must be ≥12 hours to qualify</span>
+          </div>
         </div>
-        <div class="field">
-          <label for="uoOutput">Urine output over period (ml)</label>
-          <input type="number" id="uoOutput" step="1" oninput="evaluate()">
-        </div>
-        <div class="field">
-          <label for="uoHours">Duration (hours)</label>
-          <input type="number" id="uoHours" step="0.5" oninput="evaluate()">
-          <span class="hint">Must be ≥12 hours to qualify</span>
+        <span id="crit3c-val" style="color:var(--muted); font-size:0.82rem;"></span>
+        <div class="skip-row">
+          <label><input type="checkbox" id="skipC" onchange="evaluate()"> No urine output data available for this route</label>
         </div>
       </div>
-      <span id="crit3c-val" style="color:var(--muted); font-size:0.82rem;"></span>
     </div>
+
+    <p class="crit-msg" id="ind3-msg"></p>
+  </div>
+
+  </div><!-- /step1 -->
+
+  <div class="btn-row" style="margin-bottom:14px;">
+    <button onclick="checkEligibility()">Check eligibility ↓</button>
+  </div>
+
+  <div class="card gate-card" id="gate-incomplete">
+    <p style="margin:0; font-size:0.88rem; color:var(--muted);">Complete all three inclusion criteria above (age, metabolic acidosis, AKI KDIGO 2/3) to unlock exclusion criteria.</p>
+  </div>
+
+  <div class="card gate-card status-ineligible" id="gate-ineligible" style="display:none;">
+    <p style="margin:0; font-size:0.9rem;" id="gate-ineligible-text"></p>
+  </div>
+
+  <div class="card gate-card status-eligible" id="gate-complete" style="display:none;">
+    <p style="margin:0 0 12px 0; font-size:0.9rem;">Meets all three inclusion criteria. Exclusion criteria have not been checked yet.</p>
+    <button onclick="continueToStep2()">Continue to exclusion criteria →</button>
+  </div>
+
+  <div id="step2" style="display:none;">
+  <div class="step-banner">Step 2 of 2 — Exclusion criteria</div>
+  <div class="btn-row" style="margin-bottom:14px;">
+    <button class="secondary" onclick="backToStep1()">&larr; Back to inclusion criteria</button>
   </div>
 
   <!-- DYNAMIC LABS (drive exclusion 10-12) -->
@@ -240,11 +333,11 @@
     </div>
     <div class="excl-item">
       <input type="checkbox" id="ex2" onchange="evaluate()">
-      <label for="ex2"><span class="num">2.</span> KRT planned to start in next 3 hours and treating clinician(s) unwilling to defer if randomised to sodium bicarbonate</label>
+      <label for="ex2"><span class="num">2.</span> Renal replacement therapy planned to start in next 3 hours and treating clinician(s) unwilling to defer if randomised to sodium bicarbonate</label>
     </div>
     <div class="excl-item">
       <input type="checkbox" id="ex3" onchange="evaluate()">
-      <label for="ex3"><span class="num">3.</span> Deemed unsuitable for KRT</label>
+      <label for="ex3"><span class="num">3.</span> Deemed unsuitable for renal replacement therapy</label>
     </div>
     <div class="excl-item">
       <input type="checkbox" id="ex4" onchange="evaluate()">
@@ -296,7 +389,10 @@
     </div>
   </div>
 
+  </div><!-- /step2 -->
+
   <div class="btn-row">
+    <button onclick="checkEligibility()">Check eligibility ↓</button>
     <button class="secondary" onclick="resetForm()">Reset all fields</button>
     <button class="secondary" onclick="window.print()">Print this assessment</button>
   </div>
@@ -316,6 +412,8 @@
 </footer>
 
 <script>
+let step2Opened = false; // true once the user explicitly clicks "Continue to exclusion criteria"
+
 function num(id){
   const v = document.getElementById(id).value;
   return v === "" ? null : parseFloat(v);
@@ -330,25 +428,124 @@ function setDot(id, state){
   else if(state === false) el.classList.add('fail');
 }
 
+function setCriterion(dotId, cardId, msgId, state, passText, failText, pendingText){
+  // Card background is only tinted on a genuine PASS (a quiet, reassuring confirmation).
+  // A "not met" result is deliberately just a plain-text statement with no colour change —
+  // the full-screen red treatment is reserved for the final verdict panel at the bottom of
+  // the page, not for each individual criterion as you work through it.
+  setDot(dotId, state);
+  const card = document.getElementById(cardId);
+  const msg = document.getElementById(msgId);
+  card.classList.remove('pass','fail');
+  msg.classList.remove('pass','fail','pending');
+  if(state === true){
+    card.classList.add('pass');
+    msg.classList.add('pass');
+    msg.textContent = '✓ ' + passText;
+  } else if(state === false){
+    msg.classList.add('fail');
+    msg.textContent = '✗ ' + failText + '.';
+  } else {
+    msg.classList.add('pending');
+    msg.textContent = pendingText;
+  }
+}
+
+// ---- Baseline creatinine estimator (reverse four-variable MDRD, assumed eGFR 75) ----
+// Reused as-is from baseline-creatinine-calculator.html — see that file, and memory
+// [[baseline-creatinine-mdrd-method]], for the formula's source and known limitations.
+function estimateBaselineCr(age, sexCode){
+  const sexFactor = (sexCode === 2) ? 0.742 : 1;
+  const step = 75 / (sexFactor * Math.pow(age, -0.203) * 175);
+  const scr_mgdl = Math.pow(step, 1 / -1.154);
+  return (scr_mgdl * 88.4) + 3.056; // µmol/L
+}
+
+function toggleBaselineCalc(){
+  const panel = document.getElementById('baseline-calc-panel');
+  const btn = document.getElementById('baseline-calc-toggle-btn');
+  const show = panel.style.display === 'none';
+  panel.style.display = show ? 'block' : 'none';
+  btn.textContent = show ? '← Hide estimator' : 'No true baseline available? Estimate it →';
+  if(show) runBaselineCalc();
+}
+
+function selectSex(val){
+  document.getElementById('calcSex').value = val;
+  document.getElementById('sexBtnM').classList.toggle('active', val === 1);
+  document.getElementById('sexBtnF').classList.toggle('active', val === 2);
+  runBaselineCalc();
+}
+
+function runBaselineCalc(){
+  const panel = document.getElementById('baseline-calc-panel');
+  if(panel.style.display === 'none') return; // nothing to update while hidden
+  const age = num('age');
+  const sexVal = document.getElementById('calcSex').value;
+  const resultEl = document.getElementById('baseline-calc-result');
+  const useBtn = document.getElementById('use-estimate-btn');
+  resultEl.classList.remove('pass','fail','pending');
+  window._baselineEstimate = null;
+  useBtn.disabled = true;
+
+  if(age === null){
+    resultEl.classList.add('pending');
+    resultEl.textContent = 'Enter age in Criterion 1 above first.';
+    return;
+  }
+  if(age < 18){
+    resultEl.classList.add('fail');
+    resultEl.textContent = 'Not valid for age <18 — this equation was derived in adults.';
+    return;
+  }
+  if(sexVal === ''){
+    resultEl.classList.add('pending');
+    resultEl.textContent = 'Select sex to calculate.';
+    return;
+  }
+  const sexCode = parseInt(sexVal, 10);
+  const est = Math.round(estimateBaselineCr(age, sexCode));
+  window._baselineEstimate = est;
+  resultEl.classList.add('pass');
+  resultEl.textContent = `Estimated baseline: ${est} µmol/L (age ${age}, ${sexCode === 2 ? 'female' : 'male'}, assumed eGFR 75 mL/min/1.73m²).`;
+  useBtn.disabled = false;
+}
+
+function useBaselineEstimate(){
+  if(window._baselineEstimate){
+    document.getElementById('baselineCr').value = window._baselineEstimate;
+    evaluate();
+  }
+}
+
 function evaluate(){
+  runBaselineCalc(); // keep the estimator's "age" readout in sync if it's open
   // ---- Inclusion 1: age ----
   const age = num('age');
   const ind1 = age === null ? null : age >= 18;
-  setDot('ind1-dot', ind1);
+  setCriterion('ind1-dot', 'card-ind1', 'ind1-msg', ind1,
+    'Meets criterion (adult)', 'Does not meet criterion (age <18)', 'Enter age to check');
 
   // ---- Inclusion 2: metabolic acidosis ----
   const ph = num('ph');
   const paco2 = num('paco2');
   const ind2 = (ph === null || paco2 === null) ? null : (ph < 7.30 && paco2 < 6.5);
-  setDot('ind2-dot', ind2);
+  setCriterion('ind2-dot', 'card-ind2', 'ind2-msg', ind2,
+    'Meets criterion (pH <7.30 and PaCO₂ <6.5 kPa)', 'Does not meet criterion (pH/PaCO₂ out of range)', 'Enter pH and PaCO₂ to check');
 
   // ---- Inclusion 3: AKI KDIGO 2/3 ----
+  // Each of A, B, C resolves only from what's actually been entered, OR from an explicit
+  // "no data for this route" tick — never from silently assuming a blank field means "not
+  // applicable". Pressing "Check eligibility" does not change this: it just displays the
+  // current state and scrolls to it, it never fills in gaps on your behalf.
   const baselineCr = num('baselineCr');
   const currentCr = num('currentCr');
   const cr48h = num('cr48h');
   const weight = num('weight');
   const uoOutput = num('uoOutput');
   const uoHours = num('uoHours');
+  const skipB = checked('skipB');
+  const skipC = checked('skipC');
 
   // Criterion A
   let critA = null;
@@ -356,13 +553,16 @@ function evaluate(){
     critA = currentCr >= 2.0 * baselineCr;
   }
   const critAEl = document.getElementById('crit3a');
-  document.getElementById('crit3a-val').textContent = critA === null ? '' :
+  document.getElementById('crit3a-val').textContent =
+    (critA === null) ? '(enter both baseline and current creatinine to evaluate)' :
     (critA ? '✓ met' : '✗ not met') + (baselineCr && currentCr ? ` (ratio ${(currentCr/baselineCr).toFixed(2)}×)` : '');
   critAEl.classList.toggle('met', critA === true);
 
   // Criterion B
   let critB = null;
-  if(currentCr !== null){
+  if(skipB){
+    critB = false;
+  } else if(currentCr !== null){
     const above354 = currentCr >= 354;
     let riseRoute = null;
     if(cr48h !== null) riseRoute = (currentCr - cr48h) >= 27;
@@ -371,29 +571,140 @@ function evaluate(){
     if(above354 && (riseRoute === true || ratioRoute === true)) critB = true;
     else if(!above354) critB = false;
     else if(riseRoute === false && ratioRoute === false) critB = false;
-    // else remains null (insufficient data to rule in/out the OR route)
+    // else remains null (current Cr ≥354 but neither the rise nor the ratio route can be confirmed yet)
+
+    var critBNotMetReason = !above354
+      ? `current creatinine ${currentCr} µmol/L is below the required ≥354 µmol/L threshold — the 48h/baseline fields don't change this`
+      : 'neither the 48h rise nor the baseline ratio route is met';
   }
   const critBEl = document.getElementById('crit3b');
-  document.getElementById('crit3b-val').textContent = critB === null ? '(enter current Cr, and either 48h-prior Cr or baseline, to evaluate)' :
-    (critB ? '✓ met' : '✗ not met');
+  document.getElementById('crit3b-val').textContent =
+    skipB ? 'not assessed — no data available for this route' :
+    currentCr === null ? '(enter current creatinine above, or tick "no data" below, to evaluate)' :
+    critB === null ? '(enter 48h-prior Cr or baseline Cr, or tick "no data" below, to confirm this route)' :
+    critB ? '✓ met' :
+    `✗ not met (${critBNotMetReason})`;
   critBEl.classList.toggle('met', critB === true);
 
   // Criterion C
   let critC = null;
   let rateVal = null;
-  if(weight !== null && uoOutput !== null && uoHours !== null && weight > 0 && uoHours > 0){
+  if(skipC){
+    critC = false;
+  } else if(weight !== null && uoOutput !== null && uoHours !== null && weight > 0 && uoHours > 0){
     rateVal = uoOutput / weight / uoHours;
     critC = (rateVal < 0.5) && (uoHours >= 12);
   }
   const critCEl = document.getElementById('crit3c');
-  document.getElementById('crit3c-val').textContent = critC === null ? '' :
+  document.getElementById('crit3c-val').textContent =
+    skipC ? 'not assessed — no urine output data available' :
+    (critC === null) ? '(enter weight, output and duration, or tick "no data" below, to evaluate)' :
     `${critC ? '✓ met' : '✗ not met'} (rate ${rateVal.toFixed(2)} ml/kg/h over ${uoHours}h)`;
   critCEl.classList.toggle('met', critC === true);
 
   let ind3 = null;
   if(critA === true || critB === true || critC === true) ind3 = true;
   else if(critA === false && critB === false && critC === false) ind3 = false;
-  setDot('ind3-dot', ind3);
+  setCriterion('ind3-dot', 'card-ind3', 'ind3-msg', ind3,
+    'Meets criterion (AKI KDIGO 2/3 via A, B and/or C)', 'Does not meet criterion (none of A/B/C satisfied)', '');
+
+  // Sequential reveal: Criterion B only shown once A is determinately not met; Criterion C only
+  // shown once B is determinately not met. As soon as any criterion is met, the later ones are
+  // hidden — they're irrelevant once one route has already satisfied inclusion 3.
+  //
+  // Special case: if current creatinine alone is already <354, Criterion B is conclusively ruled
+  // out without needing any B-specific data (the 48h/baseline fields can never change that
+  // outcome) — so B's card is skipped entirely rather than shown with a foregone conclusion,
+  // and Criterion C is reached directly.
+  const bAutoRuledOut = (currentCr !== null && currentCr < 354);
+  const crit3bSection = document.getElementById('crit3b-section');
+  const crit3cSection = document.getElementById('crit3c-section');
+  const crit3cDivider = document.getElementById('crit3c-divider');
+  if(critA === true){
+    crit3bSection.style.display = 'none';
+    crit3cSection.style.display = 'none';
+  } else if(critA === false){
+    if(bAutoRuledOut){
+      crit3bSection.style.display = 'none';
+      crit3cSection.style.display = 'block';
+      crit3cDivider.textContent = 'Criteria A and B not met (current creatinine <354 µmol/L rules out B) — checking Criterion C';
+    } else if(critB === false){
+      crit3bSection.style.display = 'block';
+      crit3cSection.style.display = 'block';
+      crit3cDivider.textContent = 'Criterion B not met — checking Criterion C';
+    } else {
+      crit3bSection.style.display = 'block';
+      crit3cSection.style.display = 'none';
+    }
+  } else {
+    crit3bSection.style.display = 'none';
+    crit3cSection.style.display = 'none';
+  }
+  // The "Criterion X not met — checking Criterion Y" dividers are red whenever they're showing,
+  // since by definition they only appear once that criterion has been confirmed not met.
+  document.getElementById('crit3b-divider').classList.toggle('fail', crit3bSection.style.display === 'block');
+  crit3cDivider.classList.toggle('fail', crit3cSection.style.display === 'block');
+
+  // ---- Step gating: inclusion result shown first; exclusion criteria only reached by an
+  // explicit "Continue to exclusion criteria" click (step2Opened), not auto-revealed. ----
+  const inclusionComplete = (ind1 === true && ind2 === true && ind3 === true);
+  const inclusionFailed = (ind1 === false || ind2 === false || ind3 === false);
+  const step2El = document.getElementById('step2');
+  const gateIncompleteEl = document.getElementById('gate-incomplete');
+  const gateIneligibleEl = document.getElementById('gate-ineligible');
+  const gateIneligibleTextEl = document.getElementById('gate-ineligible-text');
+  const gateCompleteEl = document.getElementById('gate-complete');
+  const resultEl0 = document.getElementById('result');
+  const titleEl0 = document.getElementById('result-title');
+  const detailEl0 = document.getElementById('result-detail');
+
+  if(inclusionFailed){
+    step2Opened = false;
+    step2El.style.display = 'none';
+    gateIncompleteEl.style.display = 'none';
+    gateCompleteEl.style.display = 'none';
+    gateIneligibleEl.style.display = 'block';
+    let reasons = [];
+    if(ind1 === false) reasons.push('age &lt;18');
+    if(ind2 === false) reasons.push('metabolic acidosis criteria not met (pH/PaCO₂)');
+    if(ind3 === false) reasons.push('AKI KDIGO 2/3 not met by any of criteria A/B/C');
+    gateIneligibleTextEl.innerHTML = '<strong>Not eligible — inclusion criteria not met</strong> (' + reasons.join('; ') + '). Exclusion criteria are not applicable; screening stops here.';
+    resultEl0.classList.remove('status-eligible','status-ineligible','status-incomplete');
+    resultEl0.classList.add('status-ineligible');
+    titleEl0.textContent = 'Currently NOT ELIGIBLE — inclusion criteria not met';
+    detailEl0.innerHTML = '<ul>' + reasons.map(r => `<li>${r.charAt(0).toUpperCase()+r.slice(1)}</li>`).join('') + '</ul>';
+    return;
+  }
+
+  gateIneligibleEl.style.display = 'none';
+
+  if(!inclusionComplete){
+    step2Opened = false;
+    step2El.style.display = 'none';
+    gateCompleteEl.style.display = 'none';
+    gateIncompleteEl.style.display = 'block';
+    resultEl0.classList.remove('status-eligible','status-ineligible','status-incomplete');
+    resultEl0.classList.add('status-incomplete');
+    titleEl0.textContent = 'Step 1 in progress — enter remaining inclusion values';
+    detailEl0.innerHTML = '';
+    return;
+  }
+
+  gateIncompleteEl.style.display = 'none';
+
+  if(!step2Opened){
+    step2El.style.display = 'none';
+    gateCompleteEl.style.display = 'block';
+    resultEl0.classList.remove('status-eligible','status-ineligible','status-incomplete');
+    resultEl0.classList.add('status-eligible');
+    titleEl0.textContent = 'Meets inclusion criteria — POTENTIALLY ELIGIBLE (exclusion criteria not yet checked)';
+    detailEl0.innerHTML = '<p style="font-size:0.85rem;">Click "Continue to exclusion criteria" below to complete screening.</p>';
+    return;
+  }
+
+  // step2Opened is true — show exclusion criteria and compute the full result
+  gateCompleteEl.style.display = 'none';
+  step2El.style.display = 'block';
 
   // ---- Dynamic labs -> exclusions 10-12 ----
   const ica = num('ica');
@@ -409,8 +720,8 @@ function evaluate(){
   // ---- Exclusions 1-9, 13-15 ----
   const manualExclIds = ['ex1','ex2','ex3','ex4','ex5','ex6','ex7','ex8','ex9','ex13','ex14','ex15'];
   const manualExclLabels = {
-    ex1:'Respiratory acidosis', ex2:'KRT planned <3h, clinician unwilling to defer',
-    ex3:'Unsuitable for KRT', ex4:'High output stoma/ileostomy', ex5:'Percutaneous biliary drainage',
+    ex1:'Respiratory acidosis', ex2:'Renal replacement therapy planned <3h, clinician unwilling to defer',
+    ex3:'Unsuitable for renal replacement therapy', ex4:'High output stoma/ileostomy', ex5:'Percutaneous biliary drainage',
     ex6:'End stage kidney failure / ESKD on dialysis', ex7:'Known renal tubular acidosis',
     ex8:'Diabetic ketoacidosis', ex9:'High anion gap acid poisoning', ex13:'Death perceived as imminent',
     ex14:'Known hypersensitivity to sodium bicarbonate/excipients', ex15:'Previously randomised into MOSAICC'
@@ -422,49 +733,58 @@ function evaluate(){
   if(ex12) activeDynamicExclusions.push('Severe hypokalaemia (K <3.0 mmol/L)');
   const allActiveExclusions = activeManualExclusions.concat(activeDynamicExclusions);
 
-  // ---- Overall result ----
-  const resultEl = document.getElementById('result');
-  const titleEl = document.getElementById('result-title');
-  const detailEl = document.getElementById('result-detail');
-  resultEl.classList.remove('status-eligible','status-ineligible','status-incomplete');
+  // ---- Overall result (only reached once inclusion is fully met — step 2 is live) ----
+  resultEl0.classList.remove('status-eligible','status-ineligible','status-incomplete');
 
   if(allActiveExclusions.length > 0){
-    resultEl.classList.add('status-ineligible');
-    titleEl.textContent = 'Currently NOT ELIGIBLE — exclusion criteria present';
+    resultEl0.classList.add('status-ineligible');
+    titleEl0.textContent = 'Currently NOT ELIGIBLE — exclusion criteria present';
     let html = '<ul>' + allActiveExclusions.map(e => `<li>${e}</li>`).join('') + '</ul>';
     if(activeDynamicExclusions.length > 0 && activeManualExclusions.length === 0){
       html += '<p style="font-size:0.82rem;">These are dynamic/correctable (protocol footnote †) — patient may be reconsidered if corrected.</p>';
     }
-    detailEl.innerHTML = html;
+    detailEl0.innerHTML = html;
     return;
   }
 
-  if(ind1 === false || ind2 === false || ind3 === false){
-    resultEl.classList.add('status-ineligible');
-    titleEl.textContent = 'Currently NOT ELIGIBLE — inclusion criteria not met';
-    let reasons = [];
-    if(ind1 === false) reasons.push('Age &lt;18');
-    if(ind2 === false) reasons.push('Metabolic acidosis criteria not met (pH/PaCO₂)');
-    if(ind3 === false) reasons.push('AKI KDIGO 2/3 criteria not met by any of A/B/C');
-    detailEl.innerHTML = '<ul>' + reasons.map(r => `<li>${r}</li>`).join('') + '</ul>';
-    return;
-  }
+  resultEl0.classList.add('status-eligible');
+  titleEl0.textContent = 'Meets inclusion criteria, no exclusions ticked — POTENTIALLY ELIGIBLE';
+  detailEl0.innerHTML = '';
+}
 
-  if(ind1 === true && ind2 === true && ind3 === true){
-    resultEl.classList.add('status-eligible');
-    titleEl.textContent = 'Meets inclusion criteria, no exclusions ticked — POTENTIALLY ELIGIBLE';
-    detailEl.innerHTML = '<p style="font-size:0.85rem;">Confirm with PI/research team, complete the Screening Log, and proceed per protocol consent procedures (section 4.4.2) before randomisation.</p>';
-    return;
-  }
+function checkEligibility(){
+  evaluate();
+  const resultEl = document.getElementById('result');
+  resultEl.scrollIntoView({behavior:'smooth', block:'center'});
+  resultEl.classList.remove('flash');
+  // restart the flash animation
+  void resultEl.offsetWidth;
+  resultEl.classList.add('flash');
+}
 
-  resultEl.classList.add('status-incomplete');
-  titleEl.textContent = 'Incomplete — enter remaining values to determine eligibility';
-  detailEl.innerHTML = '';
+function continueToStep2(){
+  step2Opened = true;
+  evaluate();
+  const step2El = document.getElementById('step2');
+  step2El.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function backToStep1(){
+  step2Opened = false;
+  evaluate();
+  document.getElementById('step1').scrollIntoView({behavior:'smooth'});
 }
 
 function resetForm(){
+  step2Opened = false;
   document.querySelectorAll('input[type=number]').forEach(el => el.value = '');
   document.querySelectorAll('input[type=checkbox]:not([disabled])').forEach(el => el.checked = false);
+  document.getElementById('calcSex').value = '';
+  document.getElementById('sexBtnM').classList.remove('active');
+  document.getElementById('sexBtnF').classList.remove('active');
+  document.getElementById('baseline-calc-panel').style.display = 'none';
+  document.getElementById('baseline-calc-toggle-btn').textContent = 'No true baseline available? Estimate it →';
+  window._baselineEstimate = null;
   evaluate();
 }
 

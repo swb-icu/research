@@ -20,19 +20,32 @@ Clinical staff enter:
 The page then shows a live eligible / not-eligible / incomplete verdict with the specific
 criteria driving that verdict.
 
+## Baseline creatinine estimator
+
+The AKI KDIGO 2/3 card includes a collapsible "No baseline creatinine available? Estimate
+it" section. It back-calculates serum creatinine from the four-variable MDRD equation,
+assuming a fixed eGFR of 75 mL/min/1.73m² — the AKIN/KDIGO convention used when no genuine
+pre-illness value exists. Inputs are age and sex only (no ethnicity coefficient). The
+"Use this value" button populates the baseline creatinine field and re-runs the
+eligibility check.
+
+This logic was ported from `Baseline serum creatinine calculator.xls` (provided
+separately) and is also available as a standalone page:
+[`baseline-creatinine-calculator.html`](baseline-creatinine-calculator.html). See that
+page's footer for the exact formula and known limitations — notably, the fixed eGFR of 75
+won't reflect a genuinely low baseline in patients with pre-existing CKD, and a `+3.056`
+calibration offset carried over from the source spreadsheet has unconfirmed provenance.
+Treat it as an estimate to support clinical judgement, not a substitute for a real
+pre-illness value if one can be found.
+
 ## What it deliberately does **not** do
 
 - **It is not the trial's Screening Log** and doesn't replace it.
-- **It does not estimate baseline creatinine.** The protocol references a "provided
-  calculator" for cases where no pre-illness creatinine value is available (protocol,
-  inclusion criteria footnote). That calculator was not available when this tool was built,
-  so baseline creatinine must always be entered manually by the clinician using your trust's
-  own method. If/when the actual MOSAICC calculator logic is available, it should be added
-  here rather than guessed at.
 - It stores nothing and sends nothing anywhere — all computation happens client-side in the
   browser tab, and the page has no server component.
 - It is **not validated or endorsed by ICNARC CTU** or the MOSAICC trial team. It's a local
-  team aid built from the public protocol text.
+  team aid built from the public protocol text, and the baseline creatinine estimator above
+  is not part of the published protocol — it's a convenience aid layered on top.
 
 ## Keeping it in sync with the protocol
 
