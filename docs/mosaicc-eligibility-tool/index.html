@@ -394,7 +394,6 @@
   <div class="btn-row">
     <button onclick="checkEligibility()">Check eligibility ↓</button>
     <button class="secondary" onclick="resetForm()">Reset all fields</button>
-    <button class="secondary" onclick="window.print()">Print this assessment</button>
   </div>
 
 </div>
@@ -413,6 +412,7 @@
 
 <script>
 let step2Opened = false; // true once the user explicitly clicks "Continue to exclusion criteria"
+let crit3cWasVisible = false; // tracks whether Criterion C was showing on the previous evaluate() pass
 
 function num(id){
   const v = document.getElementById(id).value;
@@ -645,6 +645,19 @@ function evaluate(){
   document.getElementById('crit3b-divider').classList.toggle('fail', crit3bSection.style.display === 'block');
   crit3cDivider.classList.toggle('fail', crit3cSection.style.display === 'block');
 
+  // As soon as Criterion C first appears (because A, or A-then-B, has just been confirmed not
+  // met), bring it up near the top of the viewport so it's visible without scrolling — the red
+  // "not met" divider directly above it scrolls up too, so that statement stays visible at the
+  // top rather than getting lost above the fold. Only fires on the reveal itself, not on every
+  // keystroke while C's fields are being filled in.
+  const crit3cNowVisible = (crit3cSection.style.display === 'block');
+  if(crit3cNowVisible && !crit3cWasVisible){
+    requestAnimationFrame(() => {
+      crit3cDivider.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  }
+  crit3cWasVisible = crit3cNowVisible;
+
   // ---- Step gating: inclusion result shown first; exclusion criteria only reached by an
   // explicit "Continue to exclusion criteria" click (step2Opened), not auto-revealed. ----
   const inclusionComplete = (ind1 === true && ind2 === true && ind3 === true);
@@ -777,6 +790,7 @@ function backToStep1(){
 
 function resetForm(){
   step2Opened = false;
+  crit3cWasVisible = false;
   document.querySelectorAll('input[type=number]').forEach(el => el.value = '');
   document.querySelectorAll('input[type=checkbox]:not([disabled])').forEach(el => el.checked = false);
   document.getElementById('calcSex').value = '';
