@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOSAICC Eligibility Aid</title>
+<style>
+  :root{
+    --blue:#0b5394; --blue-dark:#073763; --green:#1e7e34; --green-bg:#e6f4ea;
+    --red:#a80000; --red-bg:#fbe8e8; --amber:#8a6100; --amber-bg:#fff6e0;
+    --border:#d5dbe3; --text:#1c2733; --muted:#5a6a7a; --bg:#f4f6f8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text); margin:0; padding:0 0 60px 0;
+  }
+  header{
+    background:var(--blue-dark); color:#fff; padding:20px 24px;
+  }
+  header h1{margin:0 0 4px 0; font-size:1.4rem;}
+  header p{margin:0; font-size:0.85rem; opacity:0.85;}
+  .disclaimer{
+    background:var(--amber-bg); border-bottom:1px solid #e0c46a; color:var(--amber);
+    padding:12px 24px; font-size:0.85rem; line-height:1.4;
+  }
+  .wrap{max-width:840px; margin:0 auto; padding:24px;}
+  .card{
+    background:#fff; border:1px solid var(--border); border-radius:8px;
+    padding:20px 24px; margin-bottom:18px;
+  }
+  .card h2{
+    font-size:1.05rem; margin:0 0 4px 0; color:var(--blue-dark);
+    display:flex; align-items:center; gap:8px;
+  }
+  .card .sub{color:var(--muted); font-size:0.82rem; margin:0 0 16px 0;}
+  .row{display:flex; flex-wrap:wrap; gap:16px; margin-bottom:14px;}
+  .field{flex:1 1 200px; min-width:160px;}
+  .field label{
+    display:block; font-size:0.82rem; font-weight:600; margin-bottom:4px; color:var(--text);
+  }
+  .field .hint{display:block; font-weight:400; color:var(--muted); font-size:0.75rem; margin-top:2px;}
+  input[type=number], select{
+    width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:5px;
+    font-size:0.9rem; background:#fbfcfd;
+  }
+  input[type=number]:focus, select:focus{outline:2px solid var(--blue); outline-offset:1px;}
+  .subcrit{
+    border-left:3px solid var(--border); padding:10px 0 10px 14px; margin-bottom:10px;
+  }
+  .subcrit.met{border-left-color:var(--green); background:var(--green-bg);}
+  .subcrit-label{font-size:0.8rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.03em; margin-bottom:6px;}
+  .or-divider{
+    text-align:center; font-size:0.75rem; font-weight:700; color:var(--muted);
+    margin:4px 0 10px 0; letter-spacing:0.08em;
+  }
+  .excl-item{
+    display:flex; align-items:flex-start; gap:10px; padding:9px 0;
+    border-bottom:1px solid #eef1f4;
+  }
+  .excl-item:last-child{border-bottom:none;}
+  .excl-item input[type=checkbox]{margin-top:3px; width:16px; height:16px; flex-shrink:0;}
+  .excl-item label{font-size:0.88rem; cursor:pointer;}
+  .excl-item .num{color:var(--muted); font-weight:600; margin-right:4px;}
+  .dynamic-tag{
+    display:inline-block; font-size:0.68rem; font-weight:700; color:var(--amber);
+    background:var(--amber-bg); border:1px solid #e0c46a; border-radius:10px;
+    padding:1px 7px; margin-left:6px; vertical-align:middle;
+  }
+  .auto-flag{
+    display:inline-block; font-size:0.72rem; font-weight:700; color:var(--red);
+    background:var(--red-bg); border-radius:4px; padding:2px 6px; margin-left:8px;
+  }
+  #result{
+    position:sticky; bottom:0; margin:24px auto 0 auto; max-width:840px;
+    border-radius:8px; padding:18px 24px; font-size:1rem; box-shadow:0 -4px 14px rgba(0,0,0,0.12);
+  }
+  #result h3{margin:0 0 6px 0; font-size:1.15rem;}
+  #result ul{margin:8px 0 0 0; padding-left:20px; font-size:0.85rem;}
+  .status-eligible{background:var(--green-bg); border:2px solid var(--green); color:#0d3d1a;}
+  .status-ineligible{background:var(--red-bg); border:2px solid var(--red); color:#5c0000;}
+  .status-incomplete{background:#eef1f4; border:2px solid var(--border); color:var(--muted);}
+  button{
+    background:var(--blue); color:#fff; border:none; border-radius:6px;
+    padding:9px 18px; font-size:0.85rem; font-weight:600; cursor:pointer;
+  }
+  button.secondary{background:#fff; color:var(--blue); border:1px solid var(--blue);}
+  .btn-row{display:flex; gap:10px; margin-top:10px;}
+  footer{
+    max-width:840px; margin:20px auto 0 auto; padding:0 24px; color:var(--muted);
+    font-size:0.75rem; line-height:1.5;
+  }
+  .criterion-status{
+    display:inline-block; width:18px; height:18px; border-radius:50%; margin-right:8px;
+    text-align:center; line-height:18px; font-size:0.7rem; font-weight:700; color:#fff; background:var(--border);
+  }
+  .criterion-status.pass{background:var(--green);}
+  .criterion-status.fail{background:var(--red);}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>MOSAICC Eligibility Aid</h1>
+  <p>Multicentre evaluation Of Sodium bicarbonate in Acute kidney Injury in Critical Care — bedside reference tool</p>
+</header>
+
+<div class="disclaimer">
+  <strong>Support aid only — not a substitute for the trial Screening Log or PI sign-off.</strong>
+  This tool implements the inclusion/exclusion criteria from MOSAICC Protocol v6.0 (20FEB2025) as written.
+  It does not connect to the trial database, does not record or transmit any data, and does not replace
+  clinical judgement. Confirm any eligibility decision against the current approved protocol version and
+  discuss with your PI/research team before enrolment. Baseline creatinine must be entered manually — the
+  protocol's own "provided calculator" for estimating baseline creatinine is not yet integrated into this tool.
+</div>
+
+<div class="wrap">
+
+  <!-- INCLUSION 1: AGE -->
+  <div class="card">
+    <h2><span class="criterion-status" id="ind1-dot">1</span> Adult</h2>
+    <p class="sub">Inclusion criterion 1: aged ≥18 years</p>
+    <div class="row">
+      <div class="field">
+        <label for="age">Age (years)</label>
+        <input type="number" id="age" min="0" step="1" oninput="evaluate()">
+      </div>
+    </div>
+  </div>
+
+  <!-- INCLUSION 2: METABOLIC ACIDOSIS -->
+  <div class="card">
+    <h2><span class="criterion-status" id="ind2-dot">2</span> Metabolic acidosis</h2>
+    <p class="sub">Inclusion criterion 2: arterial pH &lt;7.30 AND PaCO₂ &lt;6.5 kPa</p>
+    <div class="row">
+      <div class="field">
+        <label for="ph">Arterial pH</label>
+        <input type="number" id="ph" step="0.01" placeholder="e.g. 7.22" oninput="evaluate()">
+      </div>
+      <div class="field">
+        <label for="paco2">PaCO₂ (kPa)</label>
+        <input type="number" id="paco2" step="0.1" placeholder="e.g. 5.1" oninput="evaluate()">
+        <span class="hint">Convert from mmHg by dividing by 7.5 if needed</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- INCLUSION 3: AKI KDIGO 2/3 -->
+  <div class="card">
+    <h2><span class="criterion-status" id="ind3-dot">3</span> AKI — KDIGO stage 2 or 3</h2>
+    <p class="sub">Inclusion criterion 3: <strong>any one</strong> of the three criteria below</p>
+
+    <div class="row">
+      <div class="field">
+        <label for="baselineCr">Baseline serum creatinine (µmol/L)</label>
+        <input type="number" id="baselineCr" step="1" oninput="evaluate()">
+        <span class="hint">Per protocol: use pre-hospitalisation value within 365 days if available (closest to admission if several); otherwise the lowest value from this admission prior to acute illness onset. If neither exists, enter your trust's own estimated baseline — the MOSAICC "provided calculator" is not yet built into this tool.</span>
+      </div>
+      <div class="field">
+        <label for="currentCr">Current serum creatinine (µmol/L)</label>
+        <input type="number" id="currentCr" step="1" oninput="evaluate()">
+      </div>
+    </div>
+
+    <div class="subcrit" id="crit3a">
+      <div class="subcrit-label">Criterion A</div>
+      Current creatinine ≥ 2.0 × baseline
+      <span id="crit3a-val" style="color:var(--muted); font-size:0.82rem;"></span>
+    </div>
+
+    <div class="or-divider">OR</div>
+
+    <div class="subcrit" id="crit3b">
+      <div class="subcrit-label">Criterion B</div>
+      Current creatinine ≥354 µmol/L, AND (rise ≥27 µmol/L within 48h OR current ≥1.5 × baseline)
+      <div class="row" style="margin-top:10px;">
+        <div class="field">
+          <label for="cr48h">Serum creatinine 48h prior (µmol/L) — optional, only for the "rise" route</label>
+          <input type="number" id="cr48h" step="1" oninput="evaluate()">
+        </div>
+      </div>
+      <span id="crit3b-val" style="color:var(--muted); font-size:0.82rem;"></span>
+    </div>
+
+    <div class="or-divider">OR</div>
+
+    <div class="subcrit" id="crit3c">
+      <div class="subcrit-label">Criterion C</div>
+      Urine output &lt;0.5 ml/kg/h for ≥12 hours
+      <div class="row" style="margin-top:10px;">
+        <div class="field">
+          <label for="weight">Body weight (kg)</label>
+          <input type="number" id="weight" step="0.1" oninput="evaluate()">
+        </div>
+        <div class="field">
+          <label for="uoOutput">Urine output over period (ml)</label>
+          <input type="number" id="uoOutput" step="1" oninput="evaluate()">
+        </div>
+        <div class="field">
+          <label for="uoHours">Duration (hours)</label>
+          <input type="number" id="uoHours" step="0.5" oninput="evaluate()">
+          <span class="hint">Must be ≥12 hours to qualify</span>
+        </div>
+      </div>
+      <span id="crit3c-val" style="color:var(--muted); font-size:0.82rem;"></span>
+    </div>
+  </div>
+
+  <!-- DYNAMIC LABS (drive exclusion 10-12) -->
+  <div class="card">
+    <h2>Dynamic electrolyte checks</h2>
+    <p class="sub">Drive exclusion criteria 10–12 below. These are correctable — if corrected, the patient may be reconsidered for the trial (protocol footnote †).</p>
+    <div class="row">
+      <div class="field">
+        <label for="ica">Ionised calcium (mmol/L)</label>
+        <input type="number" id="ica" step="0.01" oninput="evaluate()">
+        <span class="hint">Excludes if &lt;1.05 mmol/L (symptomatic hypocalcaemia)</span>
+      </div>
+      <div class="field">
+        <label for="na">Plasma sodium (mmol/L)</label>
+        <input type="number" id="na" step="1" oninput="evaluate()">
+        <span class="hint">Excludes if &gt;150 mmol/L</span>
+      </div>
+      <div class="field">
+        <label for="k">Potassium (mmol/L)</label>
+        <input type="number" id="k" step="0.1" oninput="evaluate()">
+        <span class="hint">Excludes if &lt;3.0 mmol/L</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXCLUSION CRITERIA -->
+  <div class="card">
+    <h2>Exclusion criteria</h2>
+    <p class="sub">Tick any that apply. Any one ticked (or any dynamic lab flag above) makes the patient currently ineligible.</p>
+
+    <div class="excl-item">
+      <input type="checkbox" id="ex1" onchange="evaluate()">
+      <label for="ex1"><span class="num">1.</span> Respiratory acidosis (acute or chronic)</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex2" onchange="evaluate()">
+      <label for="ex2"><span class="num">2.</span> KRT planned to start in next 3 hours and treating clinician(s) unwilling to defer if randomised to sodium bicarbonate</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex3" onchange="evaluate()">
+      <label for="ex3"><span class="num">3.</span> Deemed unsuitable for KRT</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex4" onchange="evaluate()">
+      <label for="ex4"><span class="num">4.</span> High output stoma/ileostomy</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex5" onchange="evaluate()">
+      <label for="ex5"><span class="num">5.</span> Percutaneous biliary drainage</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex6" onchange="evaluate()">
+      <label for="ex6"><span class="num">6.</span> End stage kidney failure (documented eGFR &lt;15 ml/min/1.73m² prior to onset of this acute illness) or ESKD on dialysis</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex7" onchange="evaluate()">
+      <label for="ex7"><span class="num">7.</span> Known renal tubular acidosis</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex8" onchange="evaluate()">
+      <label for="ex8"><span class="num">8.</span> Diabetic ketoacidosis</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex9" onchange="evaluate()">
+      <label for="ex9"><span class="num">9.</span> High anion gap acid poisoning (e.g. polyethylene glycol, aspirin, methanol)</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex10" disabled>
+      <label for="ex10"><span class="num">10.</span> Symptomatic hypocalcaemia (ionised calcium &lt;1.05 mmol/L) <span class="dynamic-tag">dynamic — auto from labs above</span></label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex11" disabled>
+      <label for="ex11"><span class="num">11.</span> Hypernatraemia (plasma sodium &gt;150 mmol/L) <span class="dynamic-tag">dynamic — auto from labs above</span></label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex12" disabled>
+      <label for="ex12"><span class="num">12.</span> Severe hypokalaemia (potassium &lt;3.0 mmol/L) <span class="dynamic-tag">dynamic — auto from labs above</span></label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex13" onchange="evaluate()">
+      <label for="ex13"><span class="num">13.</span> Death perceived as imminent</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex14" onchange="evaluate()">
+      <label for="ex14"><span class="num">14.</span> Known hypersensitivity to sodium bicarbonate or to any excipients (SmPC section 6.1)</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex15" onchange="evaluate()">
+      <label for="ex15"><span class="num">15.</span> Previously randomised into MOSAICC</label>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="secondary" onclick="resetForm()">Reset all fields</button>
+    <button class="secondary" onclick="window.print()">Print this assessment</button>
+  </div>
+
+</div>
+
+<div id="result" class="wrap status-incomplete">
+  <h3 id="result-title">Enter values above to check eligibility</h3>
+  <div id="result-detail"></div>
+</div>
+
+<footer>
+  Based on MOSAICC Protocol v6.0 (20FEB2025), sections 4.3.1–4.3.2 and the trial Summary table.
+  Verify against the currently approved protocol version before use — criteria may change with amendments
+  (see protocol Appendix 1). This tool is not affiliated with or validated by the ICNARC CTU; it is a local
+  team reference aid. Report any suspected discrepancy to your local trial team before relying on it.
+</footer>
+
+<script>
+function num(id){
+  const v = document.getElementById(id).value;
+  return v === "" ? null : parseFloat(v);
+}
+function checked(id){
+  return document.getElementById(id).checked;
+}
+function setDot(id, state){
+  const el = document.getElementById(id);
+  el.classList.remove('pass','fail');
+  if(state === true) el.classList.add('pass');
+  else if(state === false) el.classList.add('fail');
+}
+
+function evaluate(){
+  // ---- Inclusion 1: age ----
+  const age = num('age');
+  const ind1 = age === null ? null : age >= 18;
+  setDot('ind1-dot', ind1);
+
+  // ---- Inclusion 2: metabolic acidosis ----
+  const ph = num('ph');
+  const paco2 = num('paco2');
+  const ind2 = (ph === null || paco2 === null) ? null : (ph < 7.30 && paco2 < 6.5);
+  setDot('ind2-dot', ind2);
+
+  // ---- Inclusion 3: AKI KDIGO 2/3 ----
+  const baselineCr = num('baselineCr');
+  const currentCr = num('currentCr');
+  const cr48h = num('cr48h');
+  const weight = num('weight');
+  const uoOutput = num('uoOutput');
+  const uoHours = num('uoHours');
+
+  // Criterion A
+  let critA = null;
+  if(baselineCr !== null && currentCr !== null && baselineCr > 0){
+    critA = currentCr >= 2.0 * baselineCr;
+  }
+  const critAEl = document.getElementById('crit3a');
+  document.getElementById('crit3a-val').textContent = critA === null ? '' :
+    (critA ? '✓ met' : '✗ not met') + (baselineCr && currentCr ? ` (ratio ${(currentCr/baselineCr).toFixed(2)}×)` : '');
+  critAEl.classList.toggle('met', critA === true);
+
+  // Criterion B
+  let critB = null;
+  if(currentCr !== null){
+    const above354 = currentCr >= 354;
+    let riseRoute = null;
+    if(cr48h !== null) riseRoute = (currentCr - cr48h) >= 27;
+    let ratioRoute = null;
+    if(baselineCr !== null && baselineCr > 0) ratioRoute = currentCr >= 1.5 * baselineCr;
+    if(above354 && (riseRoute === true || ratioRoute === true)) critB = true;
+    else if(!above354) critB = false;
+    else if(riseRoute === false && ratioRoute === false) critB = false;
+    // else remains null (insufficient data to rule in/out the OR route)
+  }
+  const critBEl = document.getElementById('crit3b');
+  document.getElementById('crit3b-val').textContent = critB === null ? '(enter current Cr, and either 48h-prior Cr or baseline, to evaluate)' :
+    (critB ? '✓ met' : '✗ not met');
+  critBEl.classList.toggle('met', critB === true);
+
+  // Criterion C
+  let critC = null;
+  let rateVal = null;
+  if(weight !== null && uoOutput !== null && uoHours !== null && weight > 0 && uoHours > 0){
+    rateVal = uoOutput / weight / uoHours;
+    critC = (rateVal < 0.5) && (uoHours >= 12);
+  }
+  const critCEl = document.getElementById('crit3c');
+  document.getElementById('crit3c-val').textContent = critC === null ? '' :
+    `${critC ? '✓ met' : '✗ not met'} (rate ${rateVal.toFixed(2)} ml/kg/h over ${uoHours}h)`;
+  critCEl.classList.toggle('met', critC === true);
+
+  let ind3 = null;
+  if(critA === true || critB === true || critC === true) ind3 = true;
+  else if(critA === false && critB === false && critC === false) ind3 = false;
+  setDot('ind3-dot', ind3);
+
+  // ---- Dynamic labs -> exclusions 10-12 ----
+  const ica = num('ica');
+  const na = num('na');
+  const k = num('k');
+  const ex10 = ica !== null ? ica < 1.05 : null;
+  const ex11 = na !== null ? na > 150 : null;
+  const ex12 = k !== null ? k < 3.0 : null;
+  document.getElementById('ex10').checked = !!ex10;
+  document.getElementById('ex11').checked = !!ex11;
+  document.getElementById('ex12').checked = !!ex12;
+
+  // ---- Exclusions 1-9, 13-15 ----
+  const manualExclIds = ['ex1','ex2','ex3','ex4','ex5','ex6','ex7','ex8','ex9','ex13','ex14','ex15'];
+  const manualExclLabels = {
+    ex1:'Respiratory acidosis', ex2:'KRT planned <3h, clinician unwilling to defer',
+    ex3:'Unsuitable for KRT', ex4:'High output stoma/ileostomy', ex5:'Percutaneous biliary drainage',
+    ex6:'End stage kidney failure / ESKD on dialysis', ex7:'Known renal tubular acidosis',
+    ex8:'Diabetic ketoacidosis', ex9:'High anion gap acid poisoning', ex13:'Death perceived as imminent',
+    ex14:'Known hypersensitivity to sodium bicarbonate/excipients', ex15:'Previously randomised into MOSAICC'
+  };
+  const activeManualExclusions = manualExclIds.filter(id => checked(id)).map(id => manualExclLabels[id]);
+  const activeDynamicExclusions = [];
+  if(ex10) activeDynamicExclusions.push('Symptomatic hypocalcaemia (ionised Ca <1.05 mmol/L)');
+  if(ex11) activeDynamicExclusions.push('Hypernatraemia (Na >150 mmol/L)');
+  if(ex12) activeDynamicExclusions.push('Severe hypokalaemia (K <3.0 mmol/L)');
+  const allActiveExclusions = activeManualExclusions.concat(activeDynamicExclusions);
+
+  // ---- Overall result ----
+  const resultEl = document.getElementById('result');
+  const titleEl = document.getElementById('result-title');
+  const detailEl = document.getElementById('result-detail');
+  resultEl.classList.remove('status-eligible','status-ineligible','status-incomplete');
+
+  if(allActiveExclusions.length > 0){
+    resultEl.classList.add('status-ineligible');
+    titleEl.textContent = 'Currently NOT ELIGIBLE — exclusion criteria present';
+    let html = '<ul>' + allActiveExclusions.map(e => `<li>${e}</li>`).join('') + '</ul>';
+    if(activeDynamicExclusions.length > 0 && activeManualExclusions.length === 0){
+      html += '<p style="font-size:0.82rem;">These are dynamic/correctable (protocol footnote †) — patient may be reconsidered if corrected.</p>';
+    }
+    detailEl.innerHTML = html;
+    return;
+  }
+
+  if(ind1 === false || ind2 === false || ind3 === false){
+    resultEl.classList.add('status-ineligible');
+    titleEl.textContent = 'Currently NOT ELIGIBLE — inclusion criteria not met';
+    let reasons = [];
+    if(ind1 === false) reasons.push('Age &lt;18');
+    if(ind2 === false) reasons.push('Metabolic acidosis criteria not met (pH/PaCO₂)');
+    if(ind3 === false) reasons.push('AKI KDIGO 2/3 criteria not met by any of A/B/C');
+    detailEl.innerHTML = '<ul>' + reasons.map(r => `<li>${r}</li>`).join('') + '</ul>';
+    return;
+  }
+
+  if(ind1 === true && ind2 === true && ind3 === true){
+    resultEl.classList.add('status-eligible');
+    titleEl.textContent = 'Meets inclusion criteria, no exclusions ticked — POTENTIALLY ELIGIBLE';
+    detailEl.innerHTML = '<p style="font-size:0.85rem;">Confirm with PI/research team, complete the Screening Log, and proceed per protocol consent procedures (section 4.4.2) before randomisation.</p>';
+    return;
+  }
+
+  resultEl.classList.add('status-incomplete');
+  titleEl.textContent = 'Incomplete — enter remaining values to determine eligibility';
+  detailEl.innerHTML = '';
+}
+
+function resetForm(){
+  document.querySelectorAll('input[type=number]').forEach(el => el.value = '');
+  document.querySelectorAll('input[type=checkbox]:not([disabled])').forEach(el => el.checked = false);
+  evaluate();
+}
+
+evaluate();
+</script>
+
+</body>
+</html>
