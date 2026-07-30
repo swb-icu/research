@@ -14,6 +14,11 @@ Home for research projects, analysis code, and small tools built by the team.
 
 | Project | Description | Live page |
 |---|---|---|
+| [`docs/index.html`](docs/index.html) | SWB ICU landing page — buttons through to each trial below. | https://swb-icu.github.io/research/ |
+| [`release`](docs/release/) | RELEASE trial info page (APRV vs. conventional ventilation). | https://swb-icu.github.io/research/release/ |
+| [`abbrupt`](docs/abbrupt/) | ABBRUPT trial info page — placeholder, content TBC. | https://swb-icu.github.io/research/abbrupt/ |
+| [`shorter`](docs/shorter/) | SHORTER trial info page — placeholder, content TBC. | https://swb-icu.github.io/research/shorter/ |
+| [`genomicc`](docs/genomicc/) | GenOMICC trial info page — placeholder, content TBC. | https://swb-icu.github.io/research/genomicc/ |
 | [`mosaicc-eligibility-tool`](docs/mosaicc-eligibility-tool/) | Bedside reference aid for MOSAICC trial inclusion/exclusion criteria (protocol v6.0). Not affiliated with or validated by ICNARC CTU — local team aid only. | https://swb-icu.github.io/research/mosaicc-eligibility-tool/ |
 
 ## GitHub Pages setup (one-time)
