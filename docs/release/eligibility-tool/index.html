@@ -30,6 +30,7 @@
   .card .sub{color:var(--muted); font-size:0.82rem; margin:0 0 16px 0;}
   .row{display:flex; flex-wrap:wrap; gap:16px; margin-bottom:14px;}
   .field{flex:1 1 200px; min-width:160px;}
+  .field-sm{flex:0 1 110px; min-width:90px;}
   .field label{display:block; font-size:0.82rem; font-weight:600; margin-bottom:4px; color:var(--text);}
   .field .hint{display:block; font-weight:400; color:var(--muted); font-size:0.75rem; margin-top:2px;}
   input[type=number], input[type=date], input[type=time], input[type=text], select{
@@ -173,11 +174,16 @@
         <span class="hint">Calculated automatically &mdash; % &divide; 100</span>
       </div>
     </div>
+    <div class="pf-result" id="pf-result">
+      <span id="pf-value">Enter PaO&#8322; and FiO&#8322; to calculate the P:F ratio.</span>
+    </div>
+    <p class="subcheck pending" id="pf-check-ratio"></p>
+
     <div class="row">
-      <div class="field">
+      <div class="field field-sm">
         <label for="peep">PEEP (cmH&#8322;O)</label>
         <input type="number" id="peep" step="0.5" oninput="evaluate()">
-        <span class="hint">Must be &ge;5 cmH&#8322;O for this measurement to count</span>
+        <span class="hint">&ge;5 to count</span>
       </div>
       <div class="field">
         <label for="imvDate">IMV started (date and time)</label>
@@ -185,14 +191,13 @@
           <input type="date" id="imvDate" oninput="evaluate()">
           <input type="time" id="imvTime" oninput="evaluate()">
         </div>
-        <span class="hint" id="imv-hours-hint">Hours since IMV start are calculated automatically &mdash; must fall within 60 hours</span>
+      </div>
+      <div class="field">
+        <label for="imvHours">Hours since intubation</label>
+        <input type="text" id="imvHours" readonly disabled placeholder="&mdash;">
+        <span class="hint">Calculated automatically &mdash; must be &le;60h</span>
       </div>
     </div>
-
-    <div class="pf-result" id="pf-result">
-      <span id="pf-value">Enter PaO&#8322; and FiO&#8322; to calculate the P:F ratio.</span>
-    </div>
-    <p class="subcheck pending" id="pf-check-ratio"></p>
     <p class="subcheck pending" id="pf-check-peep"></p>
     <p class="subcheck pending" id="pf-check-timing"></p>
 
@@ -405,6 +410,16 @@ function evaluate(){
   const hoursRaw = hoursSinceImvStart();
   const hoursFuture = hoursRaw !== null && hoursRaw < 0;
   const hours = hoursFuture ? null : hoursRaw;
+
+  // Hours-since-intubation read-out (not editable)
+  const imvHoursEl = document.getElementById('imvHours');
+  if(hoursRaw === null){
+    imvHoursEl.value = '';
+  } else if(hoursFuture){
+    imvHoursEl.value = 'future date/time';
+  } else {
+    imvHoursEl.value = hoursRaw.toFixed(1) + 'h';
+  }
 
   // FiO₂ fraction read-out (staff learning aid — not editable)
   const fio2FractionEl = document.getElementById('fio2Fraction');
