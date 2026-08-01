@@ -130,7 +130,7 @@
     <div class="row">
       <div class="field">
         <label for="age">Age (years)</label>
-        <input type="number" id="age" min="0" step="1" oninput="evaluate()" onchange="evaluate()" onkeyup="evaluate()">
+        <input type="number" id="age" min="0" step="1" oninput="runScreening()" onchange="runScreening()" onkeyup="runScreening()">
       </div>
     </div>
     <p class="crit-msg" id="ind1-msg"></p>
@@ -161,11 +161,11 @@
     <div class="row">
       <div class="field">
         <label for="pao2">PaO&#8322; (kPa)</label>
-        <input type="number" id="pao2" step="0.1" placeholder="e.g. 9.5" oninput="evaluate()" onchange="evaluate()" onkeyup="evaluate()">
+        <input type="number" id="pao2" step="0.1" placeholder="e.g. 9.5" oninput="runScreening()" onchange="runScreening()" onkeyup="runScreening()">
       </div>
       <div class="field">
         <label for="fio2">% oxygen being administered</label>
-        <input type="number" id="fio2" min="21" max="100" step="1" placeholder="e.g. 60" oninput="evaluate()" onchange="evaluate()" onkeyup="evaluate()">
+        <input type="number" id="fio2" min="21" max="100" step="1" placeholder="e.g. 60" oninput="runScreening()" onchange="runScreening()" onkeyup="runScreening()">
         <span class="hint">Enter as a percentage (21&ndash;100)</span>
       </div>
       <div class="field">
@@ -175,7 +175,7 @@
       </div>
     </div>
     <div class="btn-row" style="margin:0 0 10px 0;">
-      <button type="button" class="secondary" onclick="evaluate()">Recalculate now &#8635;</button>
+      <button type="button" class="secondary" onclick="runScreening()">Recalculate now &#8635;</button>
     </div>
     <div class="pf-result" id="pf-result">
       <span id="pf-value">Enter PaO&#8322; and % oxygen administered to calculate the P:F ratio.</span>
@@ -185,14 +185,14 @@
     <div class="row">
       <div class="field field-sm">
         <label for="peep">PEEP (cmH&#8322;O)</label>
-        <input type="number" id="peep" step="0.5" oninput="evaluate()" onchange="evaluate()" onkeyup="evaluate()">
+        <input type="number" id="peep" step="0.5" oninput="runScreening()" onchange="runScreening()" onkeyup="runScreening()">
         <span class="hint">&ge;5 to count</span>
       </div>
       <div class="field">
         <label for="imvDate">IMV started (date and time)</label>
         <div class="dt-row">
-          <input type="date" id="imvDate" oninput="evaluate()" onchange="evaluate()">
-          <input type="time" id="imvTime" oninput="evaluate()" onchange="evaluate()">
+          <input type="date" id="imvDate" oninput="runScreening()" onchange="runScreening()">
+          <input type="time" id="imvTime" oninput="runScreening()" onchange="runScreening()">
         </div>
       </div>
       <div class="field">
@@ -226,12 +226,9 @@
 
   </div><!-- /step1 -->
 
-  <div class="btn-row" style="margin-bottom:14px;">
-    <button onclick="checkEligibility()">Check eligibility &darr;</button>
-  </div>
-
   <div class="card gate-card" id="gate-incomplete">
-    <p style="margin:0; font-size:0.88rem; color:var(--muted);">Complete all four inclusion criteria above to unlock exclusion criteria.</p>
+    <p style="margin:0 0 12px 0; font-size:0.88rem; color:var(--muted);" id="gate-incomplete-text">Complete the four inclusion criteria above, then press &ldquo;Check eligibility&rdquo;.</p>
+    <button onclick="checkEligibility()">Check eligibility &darr;</button>
   </div>
 
   <div class="card gate-card status-ineligible" id="gate-ineligible" style="display:none;">
@@ -259,7 +256,7 @@
     <div class="row">
       <div class="field">
         <label for="ph">Arterial pH (on the ABG assessed for trial inclusion)</label>
-        <input type="number" id="ph" step="0.01" placeholder="e.g. 7.28" oninput="evaluate()" onchange="evaluate()" onkeyup="evaluate()">
+        <input type="number" id="ph" step="0.01" placeholder="e.g. 7.28" oninput="updateStep2Live()" onchange="updateStep2Live()" onkeyup="updateStep2Live()">
         <span class="hint">Excludes if &lt;7.20 (severe hypercapnic respiratory acidosis)</span>
       </div>
     </div>
@@ -274,17 +271,17 @@
       <label for="ex1"><span class="num">1.</span> Receiving IMV &ge;60 hours at time of screening (unable to deliver early APRV) <span class="dynamic-tag">auto &mdash; from IMV start date/time entered in Criterion 3 above</span></label>
     </div>
     <div class="excl-item">
-      <input type="checkbox" id="ex2" onchange="evaluate()">
+      <input type="checkbox" id="ex2" onchange="updateStep2Live()">
       <label for="ex2"><span class="num">2.</span> Primary reason for IMV is one of the following:</label>
     </div>
     <div class="excl-sub">
-      <div class="excl-item"><input type="checkbox" id="ex2a" onchange="evaluate()"><label for="ex2a">a. Asthma</label></div>
-      <div class="excl-item"><input type="checkbox" id="ex2b" onchange="evaluate()"><label for="ex2b">b. Severe Chronic Obstructive Pulmonary Disease (COPD)</label></div>
-      <div class="excl-item"><input type="checkbox" id="ex2c" onchange="evaluate()"><label for="ex2c">c. Pulmonary embolism (massive or sub-massive)</label></div>
-      <div class="excl-item"><input type="checkbox" id="ex2d" onchange="evaluate()"><label for="ex2d">d. Existing neuromuscular disease (e.g. Motor Neurone Disease, Guillain Barr&eacute;, Myasthenia Gravis)</label></div>
+      <div class="excl-item"><input type="checkbox" id="ex2a" onchange="updateStep2Live()"><label for="ex2a">a. Asthma</label></div>
+      <div class="excl-item"><input type="checkbox" id="ex2b" onchange="updateStep2Live()"><label for="ex2b">b. Severe Chronic Obstructive Pulmonary Disease (COPD)</label></div>
+      <div class="excl-item"><input type="checkbox" id="ex2c" onchange="updateStep2Live()"><label for="ex2c">c. Pulmonary embolism (massive or sub-massive)</label></div>
+      <div class="excl-item"><input type="checkbox" id="ex2d" onchange="updateStep2Live()"><label for="ex2d">d. Existing neuromuscular disease (e.g. Motor Neurone Disease, Guillain Barr&eacute;, Myasthenia Gravis)</label></div>
     </div>
     <div class="excl-item">
-      <input type="checkbox" id="ex3" onchange="evaluate()">
+      <input type="checkbox" id="ex3" onchange="updateStep2Live()">
       <label for="ex3"><span class="num">3.</span> Refractory shock (systolic BP &lt;90 mmHg despite fluid administration and vasoactive drugs) <span class="resolve-tag">may resolve</span></label>
     </div>
     <div class="excl-item">
@@ -292,23 +289,23 @@
       <label for="ex4"><span class="num">4.</span> Severe hypercapnic respiratory acidosis (pH &lt;7.20) <span class="dynamic-tag">auto &mdash; from pH above</span> <span class="resolve-tag">may resolve</span></label>
     </div>
     <div class="excl-item">
-      <input type="checkbox" id="ex5" onchange="evaluate()">
+      <input type="checkbox" id="ex5" onchange="updateStep2Live()">
       <label for="ex5"><span class="num">5.</span> Ongoing air leak (e.g. unresolved pneumothorax at time of screening) <span class="resolve-tag">may resolve</span></label>
     </div>
     <div class="excl-item">
-      <input type="checkbox" id="ex6" onchange="evaluate()">
+      <input type="checkbox" id="ex6" onchange="updateStep2Live()">
       <label for="ex6"><span class="num">6.</span> Traumatic brain injury with uncontrolled intracranial hypertension <span class="resolve-tag">may resolve</span></label>
     </div>
     <div class="excl-item">
-      <input type="checkbox" id="ex7" onchange="evaluate()">
+      <input type="checkbox" id="ex7" onchange="updateStep2Live()">
       <label for="ex7"><span class="num">7.</span> Likely death or treatment withdrawal in next 24 hours</label>
     </div>
     <div class="excl-item">
-      <input type="checkbox" id="ex8" onchange="evaluate()">
+      <input type="checkbox" id="ex8" onchange="updateStep2Live()">
       <label for="ex8"><span class="num">8.</span> Home ventilation or home oxygen therapy prior to admission</label>
     </div>
     <div class="excl-item">
-      <input type="checkbox" id="ex9" onchange="evaluate()">
+      <input type="checkbox" id="ex9" onchange="updateStep2Live()">
       <label for="ex9"><span class="num">9.</span> Receiving, or decision to commence, ECMO in the next 24 hours</label>
     </div>
   </div>
@@ -370,7 +367,7 @@ function setYesNo(prefix, val){
   document.getElementById(prefix + 'Val').value = val ? 'y' : 'n';
   document.getElementById(prefix + 'BtnY').classList.toggle('active', val === true);
   document.getElementById(prefix + 'BtnN').classList.toggle('active', val === false);
-  evaluate();
+  runScreening();
 }
 function yesNoVal(prefix){
   const v = document.getElementById(prefix + 'Val').value;
@@ -394,7 +391,11 @@ function setSub(id, state, text){
   el.textContent = (state === true ? '✓ ' : state === false ? '✗ ' : '') + text;
 }
 
-function evaluate(){
+// Live, per-field feedback only — updates the individual criterion checkmarks,
+// P:F/FiO2/hours read-outs, and the auto-derived exclusion checkboxes.
+// Does NOT touch the colored verdict (gate cards / #result) — that only
+// changes when checkEligibility() is explicitly run.
+function updateCriteria(){
   // ---- Inclusion 1: age ----
   const age = num('age');
   const ind1 = age === null ? null : age >= 18;
@@ -469,7 +470,60 @@ function evaluate(){
   setCriterion('ind4-dot', 'card-ind4', 'ind4-msg', exp,
     'Meets criterion (expected IMV >48h)', 'Does not meet criterion (not expected to need IMV >48h)', 'Select Yes/No to check');
 
-  // ---- Step gating ----
+  // ---- Auto-derived exclusion checkboxes (bookkeeping only, not a verdict) ----
+  const ex1 = hours !== null ? hours >= 60 : null;
+  document.getElementById('ex1').checked = !!ex1;
+  const ph = num('ph');
+  const ex4 = ph !== null ? ph < 7.20 : null;
+  document.getElementById('ex4').checked = !!ex4;
+  const ex2Sub = ['ex2a','ex2b','ex2c','ex2d'].some(id => checked(id));
+  document.getElementById('ex2').checked = ex2Sub;
+
+  return { ind1, imv, ind3, exp, hours, ph, ex1, ex4 };
+}
+
+function setResult(statusClass, title, detailHtml){
+  const resultEl0 = document.getElementById('result');
+  const titleEl0 = document.getElementById('result-title');
+  const detailEl0 = document.getElementById('result-detail');
+  resultEl0.classList.remove('status-eligible','status-ineligible','status-incomplete');
+  resultEl0.classList.add(statusClass);
+  titleEl0.textContent = title;
+  detailEl0.innerHTML = detailHtml;
+}
+
+// Called by every STEP 1 field (age, IMV, PaO2/FiO2/PEEP/IMV start, expected>48h).
+// Editing any of these after a check invalidates it — collapses back to step 1
+// and resets the verdict to neutral, so it can never show a stale green/red.
+function runScreening(){
+  const c = updateCriteria();
+  step2Opened = false;
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('gate-ineligible').style.display = 'none';
+  document.getElementById('gate-complete').style.display = 'none';
+  document.getElementById('gate-incomplete').style.display = 'block';
+  const allTouched = (c.ind1 !== null || c.imv !== null || c.ind3 !== null || c.exp !== null);
+  document.getElementById('gate-incomplete-text').textContent = allTouched
+    ? 'Values entered/changed — press "Check eligibility" to see the current result.'
+    : 'Complete the four inclusion criteria above, then press "Check eligibility".';
+  setResult('status-incomplete',
+    allTouched ? 'Not yet checked — press "Check eligibility" above' : 'Enter values above, then press "Check eligibility"',
+    '');
+}
+
+// Called by STEP 2 fields (pH, exclusion checkboxes) — keeps the checklist and
+// step 2 visible (no point re-hiding it every tick), just clears the verdict
+// back to neutral until "Check eligibility" is pressed again.
+function updateStep2Live(){
+  updateCriteria();
+  setResult('status-incomplete', 'Values changed — press "Check eligibility" to update the result.', '');
+}
+
+// Explicit verdict — only this function is allowed to show green/red.
+function checkEligibility(){
+  const c = updateCriteria();
+  const { ind1, imv, ind3, exp, hours, ph, ex1, ex4 } = c;
+
   const inclusionComplete = (ind1 === true && imv === true && ind3 === true && exp === true);
   const inclusionFailed = (ind1 === false || imv === false || ind3 === false || exp === false);
   const step2El = document.getElementById('step2');
@@ -477,9 +531,6 @@ function evaluate(){
   const gateIneligibleEl = document.getElementById('gate-ineligible');
   const gateIneligibleTextEl = document.getElementById('gate-ineligible-text');
   const gateCompleteEl = document.getElementById('gate-complete');
-  const resultEl0 = document.getElementById('result');
-  const titleEl0 = document.getElementById('result-title');
-  const detailEl0 = document.getElementById('result-detail');
 
   if(inclusionFailed){
     step2Opened = false;
@@ -493,10 +544,8 @@ function evaluate(){
     if(ind3 === false) reasons.push('P:F ratio / PEEP / timing criteria not met');
     if(exp === false) reasons.push('not expected to remain on IMV &gt;48h');
     gateIneligibleTextEl.innerHTML = '<strong>Not eligible &mdash; inclusion criteria not met</strong> (' + reasons.join('; ') + '). Exclusion criteria are not applicable; screening stops here.';
-    resultEl0.classList.remove('status-eligible','status-ineligible','status-incomplete');
-    resultEl0.classList.add('status-ineligible');
-    titleEl0.textContent = 'Currently NOT ELIGIBLE — inclusion criteria not met';
-    detailEl0.innerHTML = '<ul>' + reasons.map(r => `<li>${r.charAt(0).toUpperCase()+r.slice(1)}</li>`).join('') + '</ul>';
+    setResult('status-ineligible', 'Currently NOT ELIGIBLE — inclusion criteria not met',
+      '<ul>' + reasons.map(r => `<li>${r.charAt(0).toUpperCase()+r.slice(1)}</li>`).join('') + '</ul>');
     return;
   }
 
@@ -507,10 +556,8 @@ function evaluate(){
     step2El.style.display = 'none';
     gateCompleteEl.style.display = 'none';
     gateIncompleteEl.style.display = 'block';
-    resultEl0.classList.remove('status-eligible','status-ineligible','status-incomplete');
-    resultEl0.classList.add('status-incomplete');
-    titleEl0.textContent = 'Step 1 in progress — enter remaining inclusion values';
-    detailEl0.innerHTML = '';
+    document.getElementById('gate-incomplete-text').textContent = 'Complete the four inclusion criteria above, then press "Check eligibility".';
+    setResult('status-incomplete', 'Step 1 in progress — enter remaining inclusion values', '');
     return;
   }
 
@@ -519,29 +566,14 @@ function evaluate(){
   if(!step2Opened){
     step2El.style.display = 'none';
     gateCompleteEl.style.display = 'block';
-    resultEl0.classList.remove('status-eligible','status-ineligible','status-incomplete');
-    resultEl0.classList.add('status-eligible');
-    titleEl0.textContent = 'Meets inclusion criteria — POTENTIALLY ELIGIBLE (exclusion criteria not yet checked)';
-    detailEl0.innerHTML = '<p style="font-size:0.85rem;">Click "Continue to exclusion criteria" below to complete screening.</p>';
+    setResult('status-eligible', 'Meets inclusion criteria — POTENTIALLY ELIGIBLE (exclusion criteria not yet checked)',
+      '<p style="font-size:0.85rem;">Click "Continue to exclusion criteria" below to complete screening.</p>');
     return;
   }
 
   // step2Opened is true — show exclusion criteria and compute the full result
   gateCompleteEl.style.display = 'none';
   step2El.style.display = 'block';
-
-  // ---- Auto exclusion 1: derived from IMV start date/time entered above ----
-  const ex1 = hours !== null ? hours >= 60 : null;
-  document.getElementById('ex1').checked = !!ex1;
-
-  // ---- Auto exclusion 4: derived from pH ----
-  const ph = num('ph');
-  const ex4 = ph !== null ? ph < 7.20 : null;
-  document.getElementById('ex4').checked = !!ex4;
-
-  // ---- Exclusion 2 (a-d) ----
-  const ex2Sub = ['ex2a','ex2b','ex2c','ex2d'].some(id => checked(id));
-  document.getElementById('ex2').checked = ex2Sub;
 
   const manualExclIds = ['ex3','ex5','ex6','ex7','ex8','ex9'];
   const manualExclLabels = {
@@ -566,24 +598,18 @@ function evaluate(){
 
   const allActive = activeManual.concat(activeEx2, activeAuto);
 
-  resultEl0.classList.remove('status-eligible','status-ineligible','status-incomplete');
-
   if(allActive.length > 0){
-    resultEl0.classList.add('status-ineligible');
-    titleEl0.textContent = 'Currently NOT ELIGIBLE — exclusion criteria present';
     let html = '<ul>' + allActive.map(e => `<li>${e}</li>`).join('') + '</ul>';
     const resolvableTriggered = activeManual.some(l => l.startsWith('Refractory shock') || l.startsWith('Ongoing air leak') || l.startsWith('Traumatic brain injury')) ||
       activeAuto.some(l => l.startsWith('Severe hypercapnic'));
     if(resolvableTriggered){
       html += '<p style="font-size:0.82rem;">Some of these criteria may resolve (protocol section 2.5.2 footnote) — the patient may be reconsidered if resolved and still within the eligibility window (&lt;60h of IMV).</p>';
     }
-    detailEl0.innerHTML = html;
+    setResult('status-ineligible', 'Currently NOT ELIGIBLE — exclusion criteria present', html);
     return;
   }
 
-  resultEl0.classList.add('status-eligible');
-  titleEl0.textContent = 'Meets inclusion criteria, no exclusions ticked — POTENTIALLY ELIGIBLE';
-  detailEl0.innerHTML =
+  setResult('status-eligible', 'Meets inclusion criteria, no exclusions ticked — POTENTIALLY ELIGIBLE',
     '<div class="advisory">' +
     '<p style="font-weight:600; margin:10px 0 6px 0;">If proceeding:</p>' +
     '<ul>' +
@@ -592,30 +618,28 @@ function evaluate(){
     '<li>Document the screening/eligibility assessment in the medical notes and the trial Screening Log.</li>' +
     '<li>Confirm that whoever is consenting/randomising is GCP trained and on the site delegation log.</li>' +
     '</ul>' +
-    '</div>';
+    '</div>');
 }
 
 let step2Opened = false;
 
-function checkEligibility(){
-  evaluate();
-  const resultEl = document.getElementById('result');
-  resultEl.scrollIntoView({behavior:'smooth', block:'center'});
-  resultEl.classList.remove('flash');
-  void resultEl.offsetWidth;
-  resultEl.classList.add('flash');
-}
-
 function continueToStep2(){
   step2Opened = true;
-  evaluate();
-  const step2El = document.getElementById('step2');
-  step2El.scrollIntoView({behavior:'smooth', block:'start'});
+  document.getElementById('gate-complete').style.display = 'none';
+  document.getElementById('step2').style.display = 'block';
+  updateCriteria();
+  setResult('status-incomplete', 'Press "Check eligibility" below to complete screening.', '');
+  document.getElementById('step2').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function backToStep1(){
   step2Opened = false;
-  evaluate();
+  document.getElementById('step2').style.display = 'none';
+  updateCriteria();
+  document.getElementById('gate-incomplete').style.display = 'none';
+  document.getElementById('gate-ineligible').style.display = 'none';
+  document.getElementById('gate-complete').style.display = 'block';
+  setResult('status-incomplete', 'Not yet checked — press "Check eligibility" above', '');
   document.getElementById('step1').scrollIntoView({behavior:'smooth'});
 }
 
@@ -631,11 +655,12 @@ function resetForm(){
   document.getElementById('imvBtnN').classList.remove('active');
   document.getElementById('expBtnY').classList.remove('active');
   document.getElementById('expBtnN').classList.remove('active');
-  evaluate();
+  document.getElementById('step2').style.display = 'none';
+  runScreening();
 }
 
-evaluate();
-setInterval(evaluate, 60000); // keep elapsed-hours-since-IMV live while the page is open
+runScreening();
+setInterval(updateCriteria, 60000); // keep elapsed-hours-since-IMV ticking without disturbing a confirmed check
 </script>
 
 </body>
