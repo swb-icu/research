@@ -31,6 +31,19 @@
   }
   .back{display:inline-block; margin-bottom:16px; color:var(--blue); font-size:0.85rem; text-decoration:none; font-weight:600;}
   .back:hover{text-decoration:underline;}
+  .video-wrap{position:relative; width:100%; padding-top:56.25%; border-radius:6px; overflow:hidden; background:#000;}
+  .video-wrap iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:0;}
+  .meta-table{width:100%; border-collapse:collapse; font-size:0.88rem;}
+  .meta-table td{padding:6px 0; vertical-align:top; border-bottom:1px solid #eef1f4;}
+  .meta-table td:first-child{color:var(--muted); font-weight:600; width:170px; padding-right:12px;}
+  .meta-table tr:last-child td{border-bottom:none;}
+  .btn-link{
+    display:inline-block; margin-top:6px; background:var(--blue); color:#fff; text-decoration:none;
+    padding:9px 16px; border-radius:6px; font-size:0.85rem; font-weight:600;
+  }
+  .btn-link:hover{background:var(--blue-dark);}
+  .btn-link.secondary{background:#fff; color:var(--blue); border:1px solid var(--blue);}
+  .btn-link.secondary:hover{background:#f0f5fa;}
   footer{max-width:840px; margin:20px auto 0 auto; padding:0 24px; color:var(--muted); font-size:0.75rem; line-height:1.5;}
 </style>
 </head>
@@ -51,17 +64,39 @@
   <div class="card">
     <span class="badge">Recruiting</span>
     <h2 style="margin-top:10px;">About this trial</h2>
-    <p>RELEASE is a randomised controlled trial comparing Airway Pressure Release Ventilation (APRV) with conventional ventilation in patients with moderate&ndash;severe acute hypoxaemic respiratory failure, defined by P:F ratio thresholds. The trial is in active recruitment at our site.</p>
+    <p>RELEASE is a multicentre, pragmatic, randomised controlled trial comparing early Airway Pressure Release Ventilation (APRV) with conventional lung-protective invasive mechanical ventilation (IMV) in adults with moderate&ndash;severe acute hypoxaemic respiratory failure (AHRF). APRV uses a longer inspiration time with a brief expiration, which may reduce ventilator-induced lung injury by maintaining lung volume and limiting excessive stretch and collapse.</p>
+    <p>The primary outcome is duration of invasive mechanical ventilation (time from randomisation to first successful unassisted breathing, or death). The trial aims to recruit 710 participants across UK sites; recruitment began February 2025 and is scheduled to continue to May 2027.</p>
+    <table class="meta-table">
+      <tr><td>Chief Investigators</td><td>Prof Luigi Camporota, Prof Danny McAuley</td></tr>
+      <tr><td>Sponsor</td><td>University of Warwick</td></tr>
+      <tr><td>Funder</td><td>NIHR HTA Programme (NIHR154501)</td></tr>
+      <tr><td>Registration</td><td>ISRCTN17158033</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Study explainer video</h2>
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/Np6HT_PPHKM" title="RELEASE trial explainer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Screening</h2>
+    <p>Use the eligibility tool below to work through the RELEASE inclusion and exclusion criteria at the bedside, including a built-in P:F ratio calculator.</p>
+    <a class="btn-link" href="eligibility-tool/">Open eligibility tool &rarr;</a>
   </div>
 
   <div class="card">
     <h2>More information</h2>
-    <p>Full eligibility criteria, protocol documents, and screening guidance are being added here. In the meantime, contact the research team directly.</p>
+    <p>Full protocol and study documents are held by the Warwick CTU study team. Contact the research team directly for anything not covered here.</p>
+    <a class="btn-link" href="https://warwick.ac.uk/fac/sci/med/research/ctu/trials/release/" target="_blank" rel="noopener">Main trial site (Warwick CTU) &rarr;</a>
+    <a class="btn-link secondary" href="https://www.isrctn.com/ISRCTN17158033" target="_blank" rel="noopener">ISRCTN17158033 registry entry &rarr;</a>
   </div>
 </div>
 
 <footer>
-  Page maintained by the local research team. Not a substitute for the trial protocol, Screening Log, or PI sign-off.
+  Page maintained by the local research team. Not a substitute for the trial protocol, Screening Log, or PI sign-off. Trial summary drawn from the public Warwick CTU and King&rsquo;s College London project pages (accessed 1 Aug 2026) &mdash; verify against RELEASE Protocol V3.0 (26 Mar 2025) for anything used in patient screening or consent.
 </footer>
 
 </body>

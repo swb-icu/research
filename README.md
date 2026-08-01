@@ -15,7 +15,8 @@ Home for research projects, analysis code, and small tools built by the team.
 | Project | Description | Live page |
 |---|---|---|
 | [`docs/index.html`](docs/index.html) | SWB ICU landing page — buttons through to each trial below. | https://swb-icu.github.io/research/ |
-| [`release`](docs/release/) | RELEASE trial info page (APRV vs. conventional ventilation). | https://swb-icu.github.io/research/release/ |
+| [`release`](docs/release/) | RELEASE trial info page (APRV vs. conventional ventilation) — video, summary, trial links. | https://swb-icu.github.io/research/release/ |
+| [`release/eligibility-tool`](docs/release/eligibility-tool/) | RELEASE eligibility checker (Protocol V3.0, 26 Mar 2025) with built-in P:F ratio calculator. | https://swb-icu.github.io/research/release/eligibility-tool/ |
 | [`abbrupt`](docs/abbrupt/) | ABBRUPT trial info page — placeholder, content TBC. | https://swb-icu.github.io/research/abbrupt/ |
 | [`shorter`](docs/shorter/) | SHORTER trial info page — placeholder, content TBC. | https://swb-icu.github.io/research/shorter/ |
 | [`genomicc`](docs/genomicc/) | GenOMICC trial info page — placeholder, content TBC. | https://swb-icu.github.io/research/genomicc/ |
