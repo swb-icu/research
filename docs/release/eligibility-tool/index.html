@@ -159,16 +159,8 @@
 
     <div class="row">
       <div class="field">
-        <label for="pao2">PaO&#8322;</label>
+        <label for="pao2">PaO&#8322; (kPa)</label>
         <input type="number" id="pao2" step="0.1" placeholder="e.g. 9.5" oninput="evaluate()">
-      </div>
-      <div class="field">
-        <label for="pao2Unit">Units</label>
-        <select id="pao2Unit" onchange="evaluate()">
-          <option value="kPa">kPa</option>
-          <option value="mmHg">mmHg</option>
-        </select>
-        <span class="hint">mmHg is converted to kPa by dividing by 7.5</span>
       </div>
       <div class="field">
         <label for="fio2">% oxygen being administered</label>
@@ -408,7 +400,6 @@ function evaluate(){
 
   // ---- Inclusion 3: P:F ratio ----
   const pao2 = num('pao2');
-  const pao2Unit = document.getElementById('pao2Unit').value;
   const fio2 = num('fio2');
   const peep = num('peep');
   const hoursRaw = hoursSinceImvStart();
@@ -421,13 +412,11 @@ function evaluate(){
 
   let ratioKpa = null;
   if(pao2 !== null && fio2 !== null && fio2 > 0){
-    const pao2Kpa = pao2Unit === 'mmHg' ? pao2 / 7.5 : pao2;
-    ratioKpa = pao2Kpa / (fio2 / 100);
+    ratioKpa = pao2 / (fio2 / 100);
   }
   const pfValueEl = document.getElementById('pf-value');
   if(ratioKpa !== null){
-    pfValueEl.innerHTML = 'P:F ratio: <span class="big">' + ratioKpa.toFixed(1) + ' kPa</span>' +
-      (pao2Unit === 'mmHg' ? ' (PaO₂ converted from ' + pao2 + ' mmHg)' : '');
+    pfValueEl.innerHTML = 'P:F ratio: <span class="big">' + ratioKpa.toFixed(1) + ' kPa</span>';
   } else {
     pfValueEl.textContent = 'Enter PaO₂ and FiO₂ to calculate the P:F ratio.';
   }
