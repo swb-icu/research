@@ -164,6 +164,11 @@
         <input type="number" id="pao2" step="0.1" placeholder="e.g. 9.5" oninput="runScreening()" onchange="runScreening()" onkeyup="runScreening()">
       </div>
       <div class="field">
+        <label for="ph">Arterial pH</label>
+        <input type="number" id="ph" step="0.01" placeholder="e.g. 7.28" oninput="updateStep2Live()" onchange="updateStep2Live()" onkeyup="updateStep2Live()">
+        <span class="hint">On the ABG assessed for trial inclusion &mdash; excludes if &lt;7.20</span>
+      </div>
+      <div class="field">
         <label for="fio2">% oxygen being administered</label>
         <input type="number" id="fio2" min="21" max="100" step="1" placeholder="e.g. 60" oninput="runScreening()" onchange="runScreening()" onkeyup="runScreening()">
         <span class="hint">Enter as a percentage (21&ndash;100)</span>
@@ -248,20 +253,8 @@
   </div>
 
   <div class="card">
-    <h2>Dynamic check: arterial pH</h2>
-    <p class="sub">Drives exclusion criterion 4 below.</p>
-    <div class="row">
-      <div class="field">
-        <label for="ph">Arterial pH (on the ABG assessed for trial inclusion)</label>
-        <input type="number" id="ph" step="0.01" placeholder="e.g. 7.28" oninput="updateStep2Live()" onchange="updateStep2Live()" onkeyup="updateStep2Live()">
-        <span class="hint">Excludes if &lt;7.20 (severe hypercapnic respiratory acidosis)</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
     <h2>Exclusion criteria</h2>
-    <p class="sub">Tick any that apply. Any one ticked (or the pH flag above) makes the patient currently ineligible.</p>
+    <p class="sub">Tick any that apply. Any one ticked (or the pH entered in Criterion 3) makes the patient currently ineligible.</p>
 
     <div class="excl-item">
       <input type="checkbox" id="ex1" disabled>
@@ -283,7 +276,7 @@
     </div>
     <div class="excl-item">
       <input type="checkbox" id="ex4" disabled>
-      <label for="ex4"><span class="num">4.</span> Severe hypercapnic respiratory acidosis (pH &lt;7.20) <span class="dynamic-tag">auto &mdash; from pH above</span> <span class="resolve-tag">may resolve</span></label>
+      <label for="ex4"><span class="num">4.</span> Severe hypercapnic respiratory acidosis (pH &lt;7.20) <span class="dynamic-tag">auto &mdash; from pH entered in Criterion 3 above</span> <span class="resolve-tag">may resolve</span></label>
     </div>
     <div class="excl-item">
       <input type="checkbox" id="ex5" onchange="updateStep2Live()">
