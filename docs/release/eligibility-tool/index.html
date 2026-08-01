@@ -32,11 +32,14 @@
   .field{flex:1 1 200px; min-width:160px;}
   .field label{display:block; font-size:0.82rem; font-weight:600; margin-bottom:4px; color:var(--text);}
   .field .hint{display:block; font-weight:400; color:var(--muted); font-size:0.75rem; margin-top:2px;}
-  input[type=number], select{
+  input[type=number], input[type=date], input[type=time], input[type=text], select{
     width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:5px;
     font-size:0.9rem; background:#fbfcfd;
   }
-  input[type=number]:focus, select:focus{outline:2px solid var(--blue); outline-offset:1px;}
+  input[type=number]:focus, input[type=date]:focus, input[type=time]:focus, select:focus{outline:2px solid var(--blue); outline-offset:1px;}
+  input[disabled]{background:#eef1f4; color:var(--muted); cursor:not-allowed;}
+  .field .dt-row{display:flex; gap:8px;}
+  .field .dt-row input{flex:1;}
   .yn-toggle{display:flex; gap:8px;}
   .yn-toggle button{
     flex:1; background:#fff; color:var(--blue); border:1px solid var(--blue);
@@ -168,8 +171,14 @@
         <span class="hint">mmHg is converted to kPa by dividing by 7.5</span>
       </div>
       <div class="field">
-        <label for="fio2">FiO&#8322; (%)</label>
+        <label for="fio2">% oxygen being administered</label>
         <input type="number" id="fio2" min="21" max="100" step="1" placeholder="e.g. 60" oninput="evaluate()">
+        <span class="hint">Enter as a percentage (21&ndash;100)</span>
+      </div>
+      <div class="field">
+        <label for="fio2Fraction">FiO&#8322; (fraction)</label>
+        <input type="text" id="fio2Fraction" readonly disabled placeholder="&mdash;">
+        <span class="hint">Calculated automatically &mdash; % &divide; 100</span>
       </div>
     </div>
     <div class="row">
@@ -179,9 +188,12 @@
         <span class="hint">Must be &ge;5 cmH&#8322;O for this measurement to count</span>
       </div>
       <div class="field">
-        <label for="hoursSinceImv">Hours since IMV was started</label>
-        <input type="number" id="hoursSinceImv" step="0.5" oninput="evaluate()">
-        <span class="hint">Measurement must fall within the first 60 hours of IMV</span>
+        <label for="imvDate">IMV started (date and time)</label>
+        <div class="dt-row">
+          <input type="date" id="imvDate" oninput="evaluate()">
+          <input type="time" id="imvTime" oninput="evaluate()">
+        </div>
+        <span class="hint" id="imv-hours-hint">Hours since IMV start are calculated automatically &mdash; must fall within 60 hours</span>
       </div>
     </div>
 
@@ -259,7 +271,7 @@
 
     <div class="excl-item">
       <input type="checkbox" id="ex1" disabled>
-      <label for="ex1"><span class="num">1.</span> Receiving IMV &ge;60 hours at time of screening (unable to deliver early APRV) <span class="dynamic-tag">auto &mdash; from hours entered in Criterion 3 above</span></label>
+      <label for="ex1"><span class="num">1.</span> Receiving IMV &ge;60 hours at time of screening (unable to deliver early APRV) <span class="dynamic-tag">auto &mdash; from IMV start date/time entered in Criterion 3 above</span></label>
     </div>
     <div class="excl-item">
       <input type="checkbox" id="ex2" onchange="evaluate()">
@@ -365,6 +377,16 @@ function yesNoVal(prefix){
   return v === 'y' ? true : (v === 'n' ? false : null);
 }
 
+function hoursSinceImvStart(){
+  const dateStr = document.getElementById('imvDate').value;
+  const timeStr = document.getElementById('imvTime').value;
+  if(!dateStr || !timeStr) return null;
+  const started = new Date(dateStr + 'T' + timeStr);
+  if(isNaN(started.getTime())) return null;
+  const diffHours = (Date.now() - started.getTime()) / (1000 * 60 * 60);
+  return diffHours;
+}
+
 function setSub(id, state, text){
   const el = document.getElementById(id);
   el.classList.remove('pass','fail','pending');
@@ -389,7 +411,13 @@ function evaluate(){
   const pao2Unit = document.getElementById('pao2Unit').value;
   const fio2 = num('fio2');
   const peep = num('peep');
-  const hours = num('hoursSinceImv');
+  const hoursRaw = hoursSinceImvStart();
+  const hoursFuture = hoursRaw !== null && hoursRaw < 0;
+  const hours = hoursFuture ? null : hoursRaw;
+
+  // FiO₂ fraction read-out (staff learning aid — not editable)
+  const fio2FractionEl = document.getElementById('fio2Fraction');
+  fio2FractionEl.value = fio2 !== null ? (fio2 / 100).toFixed(2) : '';
 
   let ratioKpa = null;
   if(pao2 !== null && fio2 !== null && fio2 > 0){
@@ -413,8 +441,12 @@ function evaluate(){
     'PEEP ' + peep + ' cmH₂O ' + (peepMet ? '(≥5)' : '(<5 — required PEEP not met)'));
 
   const timingMet = hours === null ? null : hours <= 60;
-  setSub('pf-check-timing', timingMet, hours === null ? 'Measured within 60h of IMV start (enter hours)' :
-    hours + ' hours since IMV start ' + (timingMet ? '(≤60h)' : '(>60h — outside eligibility window)'));
+  if(hoursFuture){
+    setSub('pf-check-timing', null, 'IMV start date/time is in the future — check entry');
+  } else {
+    setSub('pf-check-timing', timingMet, hours === null ? 'Measured within 60h of IMV start (enter IMV start date and time)' :
+      hours.toFixed(1) + ' hours since IMV start ' + (timingMet ? '(≤60h)' : '(>60h — outside eligibility window)'));
+  }
 
   let ind3 = null;
   if(ratioMet !== null && peepMet !== null && timingMet !== null){
@@ -423,7 +455,7 @@ function evaluate(){
   setCriterion('ind3-dot', 'card-ind3', 'ind3-msg', ind3,
     'Meets criterion (P:F <20 kPa, PEEP ≥5, within 60h of IMV start)',
     'Does not meet criterion (P:F ratio, PEEP, and/or timing not satisfied)',
-    'Enter PaO₂, FiO₂, PEEP and hours since IMV start to check');
+    'Enter PaO₂, FiO₂, PEEP and IMV start date/time to check');
 
   // ---- Inclusion 4: expected >48h ----
   const exp = yesNoVal('exp');
@@ -491,7 +523,7 @@ function evaluate(){
   gateCompleteEl.style.display = 'none';
   step2El.style.display = 'block';
 
-  // ---- Auto exclusion 1: derived from hours since IMV start entered above ----
+  // ---- Auto exclusion 1: derived from IMV start date/time entered above ----
   const ex1 = hours !== null ? hours >= 60 : null;
   document.getElementById('ex1').checked = !!ex1;
 
@@ -584,6 +616,8 @@ function resetForm(){
   step2Opened = false;
   document.querySelectorAll('input[type=number]').forEach(el => el.value = '');
   document.querySelectorAll('input[type=checkbox]:not([disabled])').forEach(el => el.checked = false);
+  document.getElementById('imvDate').value = '';
+  document.getElementById('imvTime').value = '';
   document.getElementById('pao2Unit').value = 'kPa';
   document.getElementById('imvVal').value = '';
   document.getElementById('expVal').value = '';
@@ -595,6 +629,7 @@ function resetForm(){
 }
 
 evaluate();
+setInterval(evaluate, 60000); // keep elapsed-hours-since-IMV live while the page is open
 </script>
 
 </body>
