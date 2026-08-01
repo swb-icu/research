@@ -130,7 +130,7 @@
     <div class="row">
       <div class="field">
         <label for="age">Age (years)</label>
-        <input type="number" id="age" min="0" step="1" oninput="evaluate()">
+        <input type="number" id="age" min="0" step="1" oninput="evaluate()" onchange="evaluate()" onkeyup="evaluate()">
       </div>
     </div>
     <p class="crit-msg" id="ind1-msg"></p>
@@ -161,11 +161,11 @@
     <div class="row">
       <div class="field">
         <label for="pao2">PaO&#8322; (kPa)</label>
-        <input type="number" id="pao2" step="0.1" placeholder="e.g. 9.5" oninput="evaluate()">
+        <input type="number" id="pao2" step="0.1" placeholder="e.g. 9.5" oninput="evaluate()" onchange="evaluate()" onkeyup="evaluate()">
       </div>
       <div class="field">
         <label for="fio2">% oxygen being administered</label>
-        <input type="number" id="fio2" min="21" max="100" step="1" placeholder="e.g. 60" oninput="evaluate()">
+        <input type="number" id="fio2" min="21" max="100" step="1" placeholder="e.g. 60" oninput="evaluate()" onchange="evaluate()" onkeyup="evaluate()">
         <span class="hint">Enter as a percentage (21&ndash;100)</span>
       </div>
       <div class="field">
@@ -173,6 +173,9 @@
         <input type="text" id="fio2Fraction" readonly disabled placeholder="&mdash;">
         <span class="hint">Calculated automatically &mdash; % &divide; 100</span>
       </div>
+    </div>
+    <div class="btn-row" style="margin:0 0 10px 0;">
+      <button type="button" class="secondary" onclick="evaluate()">Recalculate now &#8635;</button>
     </div>
     <div class="pf-result" id="pf-result">
       <span id="pf-value">Enter PaO&#8322; and FiO&#8322; to calculate the P:F ratio.</span>
@@ -182,14 +185,14 @@
     <div class="row">
       <div class="field field-sm">
         <label for="peep">PEEP (cmH&#8322;O)</label>
-        <input type="number" id="peep" step="0.5" oninput="evaluate()">
+        <input type="number" id="peep" step="0.5" oninput="evaluate()" onchange="evaluate()" onkeyup="evaluate()">
         <span class="hint">&ge;5 to count</span>
       </div>
       <div class="field">
         <label for="imvDate">IMV started (date and time)</label>
         <div class="dt-row">
-          <input type="date" id="imvDate" oninput="evaluate()">
-          <input type="time" id="imvTime" oninput="evaluate()">
+          <input type="date" id="imvDate" oninput="evaluate()" onchange="evaluate()">
+          <input type="time" id="imvTime" oninput="evaluate()" onchange="evaluate()">
         </div>
       </div>
       <div class="field">
@@ -256,7 +259,7 @@
     <div class="row">
       <div class="field">
         <label for="ph">Arterial pH (on the ABG assessed for trial inclusion)</label>
-        <input type="number" id="ph" step="0.01" placeholder="e.g. 7.28" oninput="evaluate()">
+        <input type="number" id="ph" step="0.01" placeholder="e.g. 7.28" oninput="evaluate()" onchange="evaluate()" onkeyup="evaluate()">
         <span class="hint">Excludes if &lt;7.20 (severe hypercapnic respiratory acidosis)</span>
       </div>
     </div>
