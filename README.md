@@ -19,7 +19,7 @@ Home for research projects, analysis code, and small tools built by the team.
 | [`abbrupt`](docs/abbrupt/) | ABBRUPT trial info page — placeholder, content TBC. | https://swb-icu.github.io/research/abbrupt/ |
 | [`shorter`](docs/shorter/) | SHORTER trial info page — placeholder, content TBC. | https://swb-icu.github.io/research/shorter/ |
 | [`genomicc`](docs/genomicc/) | GenOMICC trial info page — placeholder, content TBC. | https://swb-icu.github.io/research/genomicc/ |
-| [`mosaicc-eligibility-tool`](docs/mosaicc-eligibility-tool/) | Bedside reference aid for MOSAICC trial inclusion/exclusion criteria (protocol v6.0). Not affiliated with or validated by ICNARC CTU — local team aid only. | https://swb-icu.github.io/research/mosaicc-eligibility-tool/ |
+| [`mosaicc-eligibility-tool`](docs/mosaicc-eligibility-tool/) | Bedside reference aid for MOSAICC trial inclusion/exclusion criteria (protocol v6.0). Not affiliated with or validated by ICNARC CTU — local team aid only. **Not live yet — hidden from landing page.** | https://swb-icu.github.io/research/mosaicc-eligibility-tool/ (unlinked) |
 
 ## GitHub Pages setup (one-time)
 
