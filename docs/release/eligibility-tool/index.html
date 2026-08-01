@@ -178,7 +178,7 @@
       <button type="button" class="secondary" onclick="evaluate()">Recalculate now &#8635;</button>
     </div>
     <div class="pf-result" id="pf-result">
-      <span id="pf-value">Enter PaO&#8322; and FiO&#8322; to calculate the P:F ratio.</span>
+      <span id="pf-value">Enter PaO&#8322; and % oxygen administered to calculate the P:F ratio.</span>
     </div>
     <p class="subcheck pending" id="pf-check-ratio"></p>
 
@@ -436,7 +436,7 @@ function evaluate(){
   if(ratioKpa !== null){
     pfValueEl.innerHTML = 'P:F ratio: <span class="big">' + ratioKpa.toFixed(1) + ' kPa</span>';
   } else {
-    pfValueEl.textContent = 'Enter PaO₂ and FiO₂ to calculate the P:F ratio.';
+    pfValueEl.textContent = 'Enter PaO₂ and % oxygen administered to calculate the P:F ratio.';
   }
 
   const ratioMet = ratioKpa === null ? null : ratioKpa < 20;
