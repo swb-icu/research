@@ -6,8 +6,8 @@
 <title>ABBRUPT Trial &mdash; SWB ICU Research</title>
 <style>
   :root{
-    --blue:#0b5394; --blue-dark:#073763; --border:#d5dbe3; --text:#1c2733; --muted:#5a6a7a; --bg:#f4f6f8;
-    --amber:#8a6100; --amber-bg:#fff6e0; --green:#1e7e34; --green-bg:#e6f4ea;
+    --blue:#0b5394; --blue-dark:#073763; --green:#1e7e34; --green-bg:#e6f4ea;
+    --amber:#8a6100; --amber-bg:#fff6e0; --border:#d5dbe3; --text:#1c2733; --muted:#5a6a7a; --bg:#f4f6f8;
   }
   *{box-sizing:border-box;}
   body{
@@ -27,10 +27,23 @@
   .card p{font-size:0.9rem; line-height:1.6; margin:0 0 8px 0;}
   .badge{
     display:inline-block; font-size:0.7rem; font-weight:700; letter-spacing:0.03em;
-    text-transform:uppercase; padding:2px 9px; border-radius:10px; background:var(--green-bg); color:var(--green);
+    text-transform:uppercase; padding:2px 9px; border-radius:10px; background:var(--amber-bg); color:var(--amber);
   }
   .back{display:inline-block; margin-bottom:16px; color:var(--blue); font-size:0.85rem; text-decoration:none; font-weight:600;}
   .back:hover{text-decoration:underline;}
+  .video-wrap{position:relative; width:100%; padding-top:56.25%; border-radius:6px; overflow:hidden; background:#000;}
+  .video-wrap iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:0;}
+  .meta-table{width:100%; border-collapse:collapse; font-size:0.88rem;}
+  .meta-table td{padding:6px 0; vertical-align:top; border-bottom:1px solid #eef1f4;}
+  .meta-table td:first-child{color:var(--muted); font-weight:600; width:170px; padding-right:12px;}
+  .meta-table tr:last-child td{border-bottom:none;}
+  .btn-link{
+    display:inline-block; margin-top:6px; background:var(--blue); color:#fff; text-decoration:none;
+    padding:9px 16px; border-radius:6px; font-size:0.85rem; font-weight:600;
+  }
+  .btn-link:hover{background:var(--blue-dark);}
+  .btn-link.secondary{background:#fff; color:var(--blue); border:1px solid var(--blue);}
+  .btn-link.secondary:hover{background:#f0f5fa;}
   footer{max-width:840px; margin:20px auto 0 auto; padding:0 24px; color:var(--muted); font-size:0.75rem; line-height:1.5;}
 </style>
 </head>
@@ -38,7 +51,7 @@
 
 <header>
   <h1>ABBRUPT</h1>
-  <p>Trial information coming soon</p>
+  <p>Amiodarone vs. beta-blockade for new-onset atrial fibrillation in ICU</p>
 </header>
 
 <div class="disclaimer">
@@ -49,14 +62,40 @@
   <a class="back" href="../">&larr; Back to all trials</a>
 
   <div class="card">
-    <span class="badge">Recruiting</span>
+    <span class="badge">Recruitment status: verify locally</span>
     <h2 style="margin-top:10px;">About this trial</h2>
-    <p>Full details for ABBRUPT are being added here. In the meantime, contact the research team for current protocol, eligibility, and status information.</p>
+    <p>ABBRUPT (Amiodarone vs Beta Blockade for new-onset atrial fibRillation in icU &ndash; a Pragmatic sTudy) is a multicentre, open-label, randomised controlled trial comparing amiodarone with beta-blockade for new-onset atrial fibrillation (NOAF) in critically ill adults. Around 10% of ICU patients develop NOAF, which is associated with a higher risk of stroke, myocardial infarction, and longer hospital stay &mdash; but there is no clear evidence on which treatment gives the best outcome, so both drugs remain in routine use.</p>
+    <p>Eligible patients (age &ge;16) are randomised to amiodarone or a beta-blocker (choice of agent and dose left to the treating clinician), continued until sinus rhythm has been maintained for 24 hours. The primary outcome is 90-day mortality. The trial aims to recruit 2,560 participants (1,280 per arm) across NHS sites in England, Scotland, Wales, and Northern Ireland. Recruitment opened May 2024; the ISRCTN registry shows a final enrolment date of 30 June 2026 and status &ldquo;no longer recruiting&rdquo; (as at 15 Jun 2026), while BCTU&rsquo;s own trial page still describes ABBRUPT as open to recruitment &mdash; <strong>confirm current recruitment status directly with BCTU or your local PI before assuming the trial is closed locally.</strong> Study completion (end of 90-day follow-up and analysis) is expected 31 December 2026.</p>
+    <table class="meta-table">
+      <tr><td>Chief Investigator</td><td>Dr Dhruv Parekh (Deputy CI: Prof Ingeborg Welters)</td></tr>
+      <tr><td>Sponsor</td><td>University of Birmingham</td></tr>
+      <tr><td>Funder</td><td>NIHR HTA Programme (NIHR150027)</td></tr>
+      <tr><td>Registration</td><td>ISRCTN59775011 &middot; IRAS 1007930</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Study explainer video</h2>
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/0ExD471U55I" title="ABBRUPT trial explainer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Screening</h2>
+    <p>There is no standalone eligibility tool for ABBRUPT yet. Key inclusion criteria: adult patient in an area of higher care able to deliver the interventions, new-onset AF (or new episode of AF) during the acute illness with a clinical indication to treat, and usual electrolyte (potassium/magnesium) management per site practice. Key exclusions include prior anticoagulant/antiarrhythmic use for AF, contraindicated concomitant medication, serum potassium &lt;4 mmol/L, cardiac surgery during the current admission, thyrotoxicosis, planned withdrawal of life-sustaining treatment within 24 hours, and known pregnancy/breastfeeding. Confirm current criteria against the approved protocol before screening &mdash; the inclusion/exclusion list was amended in 2025.</p>
+  </div>
+
+  <div class="card">
+    <h2>More information</h2>
+    <p>Full protocol and study documents are held by the Birmingham Clinical Trials Unit (BCTU) study team. Contact the research team directly for anything not covered here.</p>
+    <a class="btn-link" href="https://www.birmingham.ac.uk/research/bctu/trials/portfolio-v/abbrupt" target="_blank" rel="noopener">Main trial site (Birmingham CTU) &rarr;</a>
+    <a class="btn-link secondary" href="https://www.isrctn.com/ISRCTN59775011" target="_blank" rel="noopener">ISRCTN59775011 &rarr;</a>
   </div>
 </div>
 
 <footer>
-  Page maintained by the local research team. Not a substitute for the trial protocol, Screening Log, or PI sign-off.
+  Page maintained by the local research team. Not a substitute for the trial protocol, Screening Log, or PI sign-off. Trial summary drawn from the public ISRCTN registry (ISRCTN59775011, record last edited 15 Jun 2026), the HRA research summary, and BCTU Protocol V4.0 (20 Jan 2025) (accessed 1 Aug 2026) &mdash; verify against the current approved ABBRUPT protocol for anything used in patient screening or consent.
 </footer>
 
 </body>
