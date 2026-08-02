@@ -6,8 +6,8 @@
 <title>GenOMICC Trial &mdash; SWB ICU Research</title>
 <style>
   :root{
-    --blue:#0b5394; --blue-dark:#073763; --border:#d5dbe3; --text:#1c2733; --muted:#5a6a7a; --bg:#f4f6f8;
-    --amber:#8a6100; --amber-bg:#fff6e0; --green:#1e7e34; --green-bg:#e6f4ea;
+    --blue:#0b5394; --blue-dark:#073763; --green:#1e7e34; --green-bg:#e6f4ea;
+    --amber:#8a6100; --amber-bg:#fff6e0; --border:#d5dbe3; --text:#1c2733; --muted:#5a6a7a; --bg:#f4f6f8;
   }
   *{box-sizing:border-box;}
   body{
@@ -31,6 +31,19 @@
   }
   .back{display:inline-block; margin-bottom:16px; color:var(--blue); font-size:0.85rem; text-decoration:none; font-weight:600;}
   .back:hover{text-decoration:underline;}
+  .video-wrap{position:relative; width:100%; padding-top:56.25%; border-radius:6px; overflow:hidden; background:#000;}
+  .video-wrap iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:0;}
+  .meta-table{width:100%; border-collapse:collapse; font-size:0.88rem;}
+  .meta-table td{padding:6px 0; vertical-align:top; border-bottom:1px solid #eef1f4;}
+  .meta-table td:first-child{color:var(--muted); font-weight:600; width:170px; padding-right:12px;}
+  .meta-table tr:last-child td{border-bottom:none;}
+  .btn-link{
+    display:inline-block; margin-top:6px; background:var(--blue); color:#fff; text-decoration:none;
+    padding:9px 16px; border-radius:6px; font-size:0.85rem; font-weight:600;
+  }
+  .btn-link:hover{background:var(--blue-dark);}
+  .btn-link.secondary{background:#fff; color:var(--blue); border:1px solid var(--blue);}
+  .btn-link.secondary:hover{background:#f0f5fa;}
   footer{max-width:840px; margin:20px auto 0 auto; padding:0 24px; color:var(--muted); font-size:0.75rem; line-height:1.5;}
 </style>
 </head>
@@ -38,7 +51,7 @@
 
 <header>
   <h1>GenOMICC</h1>
-  <p>Trial information coming soon</p>
+  <p>Genetics of susceptibility and mortality in critical care</p>
 </header>
 
 <div class="disclaimer">
@@ -51,12 +64,38 @@
   <div class="card">
     <span class="badge">Recruiting</span>
     <h2 style="margin-top:10px;">About this trial</h2>
-    <p>Full details for GenOMICC are being added here. In the meantime, contact the research team for current protocol, eligibility, and status information.</p>
+    <p>GenOMICC (Genetics Of Mortality In Critical Care) is an international, multicentre observational genetic study. It recruits critically ill patients requiring continuous cardiovascular or respiratory monitoring, or any organ support (e.g. HFNO, CPAP, NIV, invasive ventilation, vasopressors/inotropes, ECMO, or renal replacement for acute disease), whose primary diagnosis is a confirmed or suspected infection, or one of a defined list of non-infectious syndromes (pancreatitis; burns &gt;20% BSA; haemophagocytic syndrome; Still&rsquo;s disease; heat stroke; radiation poisoning; suspected reactions to therapeutic/cell/gene therapies; emerging critical illness syndromes; and, in children, preterm birth &lt;32 weeks or acute seronegative hepatitis). Participation requires only a single DNA sample &mdash; a blood sample of 4mls or less, or saliva if blood isn&rsquo;t possible &mdash; with no other study intervention. Bone marrow transplant recipients are the only exclusion.</p>
+    <p>GenOMICC has recruited continuously since 2015 and is now the largest consented critical care genetics study in the world, spanning 13 countries; during COVID-19 its genetic findings directly identified baricitinib as an effective treatment for critical COVID-19. A sub-study, GenOMICC Acute, extends recruitment with deeper biological sampling at a limited number of sites (patients &gt;20kg, samples obtainable within 48 hours of admission) &mdash; check locally whether this site participates.</p>
+    <table class="meta-table">
+      <tr><td>Chief Investigator</td><td>Prof J K Baillie, University of Edinburgh</td></tr>
+      <tr><td>Sponsors</td><td>University of Edinburgh &amp; NHS Lothian Health Board</td></tr>
+      <tr><td>Funders</td><td>Wellcome Trust, Medical Research Council, Sepsis Research FEAT, Intensive Care Society</td></tr>
+      <tr><td>Registration</td><td>IRAS 156554</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Study explainer video</h2>
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/wadhRMkKBmQ" title="GenOMICC study explainer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Screening</h2>
+    <p>In brief: any patient requiring continuous cardiovascular/respiratory monitoring or any organ support, with a primary diagnosis of infection (of any kind) or one of the listed non-infectious syndromes, is eligible unless they are a bone marrow transplant recipient. Consent/assent follows the usual pathway for patients who lack capacity (consultee in England/Wales/NI, relative in Scotland). Full inclusion/exclusion criteria and consent procedures are set out in Protocol v5 (23 Oct 2024) &mdash; confirm against the current local site file before screening or consenting a patient.</p>
+  </div>
+
+  <div class="card">
+    <h2>More information</h2>
+    <p>Full protocol, consent forms, and participant information sheets (UK-specific, England/Wales/NI and Scotland versions) are published by the study team and updated centrally.</p>
+    <a class="btn-link" href="https://genomicc.org/" target="_blank" rel="noopener">Main trial site (genomicc.org) &rarr;</a>
+    <a class="btn-link secondary" href="https://genomicc.org/investigators/protocol/uk/" target="_blank" rel="noopener">UK study documents &rarr;</a>
   </div>
 </div>
 
 <footer>
-  Page maintained by the local research team. Not a substitute for the trial protocol, Screening Log, or PI sign-off.
+  Page maintained by the local research team. Not a substitute for the trial protocol, Screening Log, or PI sign-off. Trial summary drawn from GenOMICC Protocol v5 and Participant Information Sheet v5 (both 23 Oct 2024, supplied by the local team), genomicc.org, and the HRA research summary (IRAS 156554, accessed 2 Aug 2026) &mdash; verify against the current approved GenOMICC protocol for anything used in patient screening or consent. An older cached protocol (v1.08, Mar 2020) was deliberately not used as a source for this page as it predates Version 5.
 </footer>
 
 </body>
