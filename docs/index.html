@@ -25,16 +25,14 @@
     padding:12px 24px; font-size:0.85rem; line-height:1.4;
   }
   .wrap{max-width:960px; margin:0 auto; padding:28px 24px;}
-  .grid{
-    display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
-    gap:18px;
-  }
-  .card{
+  .bars{display:flex; flex-direction:column; gap:12px;}
+  .bar{
     background:#fff; border:1px solid var(--border); border-radius:8px;
-    padding:20px 22px; display:flex; flex-direction:column; gap:10px;
+    padding:16px 20px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;
   }
-  .card h2{font-size:1.15rem; margin:0; color:var(--blue-dark);}
-  .card p{margin:0; font-size:0.88rem; color:var(--muted); line-height:1.5; flex-grow:1;}
+  .bar-name{flex:0 0 170px; display:flex; flex-direction:column; gap:6px;}
+  .bar-name h2{font-size:1.1rem; margin:0; color:var(--blue-dark);}
+  .bar p{flex:1 1 340px; margin:0; font-size:0.88rem; color:var(--muted); line-height:1.5;}
   .badge{
     display:inline-block; font-size:0.7rem; font-weight:700; letter-spacing:0.03em;
     text-transform:uppercase; padding:2px 9px; border-radius:10px; align-self:flex-start;
@@ -45,7 +43,7 @@
   .btn{
     display:inline-block; background:var(--blue); color:#fff; text-decoration:none;
     font-size:0.85rem; font-weight:600; padding:9px 16px; border-radius:6px;
-    text-align:center; margin-top:auto;
+    text-align:center; flex:0 0 auto; white-space:nowrap;
   }
   .btn:hover{background:var(--blue-dark);}
   .top-link{display:inline-block; margin-bottom:18px; color:var(--blue); font-weight:600; font-size:0.9rem; text-decoration:none;}
@@ -75,37 +73,45 @@
 
 <div class="wrap">
   <a class="top-link" href="videos/">&#9654; View all study videos</a>
-  <div class="grid">
+  <div class="bars">
 
-    <div class="card">
-      <span class="badge recruiting">Recruiting</span>
-      <h2>RELEASE</h2>
-      <p>Airway Pressure Release Ventilation (APRV) vs. conventional ventilation in patients with moderate&ndash;severe acute hypoxaemic respiratory failure (P:F ratio thresholds).</p>
-      <a class="btn" href="release/">View trial &rarr;</a>
-    </div>
-
-    <div class="card">
-      <span class="badge recruiting">Recruiting</span>
-      <h2>ABBRUPT</h2>
+    <div class="bar">
+      <div class="bar-name">
+        <span class="badge recruiting">Recruiting</span>
+        <h2>ABBRUPT</h2>
+      </div>
       <p>Amiodarone vs. beta-blockade for new-onset atrial fibrillation in critically ill adults &mdash; pragmatic, open-label RCT (90-day mortality).</p>
       <a class="btn" href="abbrupt/">View trial &rarr;</a>
     </div>
 
-    <div class="card">
-      <span class="badge recruiting">Recruiting</span>
-      <h2>SHORTER</h2>
-      <p>Short (5-day) fixed-course vs. standard-duration antibiotics for adults with suspected/confirmed sepsis in critical care.</p>
-      <a class="btn" href="shorter/">View trial &rarr;</a>
-    </div>
-
-    <div class="card">
-      <span class="badge recruiting">Recruiting</span>
-      <h2>GenOMICC</h2>
+    <div class="bar">
+      <div class="bar-name">
+        <span class="badge recruiting">Recruiting</span>
+        <h2>GenOMICC</h2>
+      </div>
       <p>Genetics Of Mortality In Critical Care &mdash; observational genetic study in patients with critical illness of any cause requiring organ support. Single DNA sample, no other intervention.</p>
       <a class="btn" href="genomicc/">View trial &rarr;</a>
     </div>
 
-    <!-- MOSAICC card hidden - not live yet. Page still exists at mosaicc-eligibility-tool/ -->
+    <div class="bar">
+      <div class="bar-name">
+        <span class="badge recruiting">Recruiting</span>
+        <h2>RELEASE</h2>
+      </div>
+      <p>Airway Pressure Release Ventilation (APRV) vs. conventional ventilation in patients with moderate&ndash;severe acute hypoxaemic respiratory failure (P:F ratio thresholds).</p>
+      <a class="btn" href="release/">View trial &rarr;</a>
+    </div>
+
+    <div class="bar">
+      <div class="bar-name">
+        <span class="badge recruiting">Recruiting</span>
+        <h2>SHORTER</h2>
+      </div>
+      <p>Short (5-day) fixed-course vs. standard-duration antibiotics for adults with suspected/confirmed sepsis in critical care.</p>
+      <a class="btn" href="shorter/">View trial &rarr;</a>
+    </div>
+
+    <!-- MOSAICC bar hidden - not live yet. Page still exists at mosaicc-eligibility-tool/ -->
 
   </div>
 
