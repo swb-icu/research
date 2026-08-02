@@ -45,6 +45,15 @@
   .btn-link.secondary{background:#fff; color:var(--blue); border:1px solid var(--blue);}
   .btn-link.secondary:hover{background:#f0f5fa;}
   footer{max-width:840px; margin:20px auto 0 auto; padding:0 24px; color:var(--muted); font-size:0.75rem; line-height:1.5;}
+  .step{display:flex; gap:12px; margin-bottom:16px;}
+  .step:last-child{margin-bottom:0;}
+  .step-num{
+    flex-shrink:0; width:24px; height:24px; border-radius:50%; background:var(--blue); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:700;
+  }
+  .step-body h3{margin:0 0 4px 0; font-size:0.92rem; color:var(--blue-dark);}
+  .step-body p{margin:0 0 8px 0; font-size:0.85rem; line-height:1.5; color:var(--text);}
+  .step-body .hint{display:block; font-size:0.78rem; color:var(--muted); margin-top:4px;}
 </style>
 </head>
 <body>
