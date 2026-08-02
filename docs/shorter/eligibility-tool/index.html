@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
 <title>SHORTER Eligibility Tool</title>
 <style>
   :root{
@@ -428,7 +429,7 @@ function checkEligibility(){
 }
 
 function alertResearchTeam(){
-  const to = 'm.lukose@nhs.net,eleanor.higgs@nhs.net';
+  const to = ['m.lukose','eleanor.higgs'].map(u => u + '@' + ['nhs','net'].join('.')).join(',');
   const subject = 'SHORTER — potentially eligible patient identified';
   const body = 'A potentially eligible patient for SHORTER has been screened as meeting inclusion criteria with no exclusions ticked on the local eligibility aid.\n\n' +
     'Please attend to review and, if appropriate, support consent and randomisation (screening/consent/randomisation must all occur within day 1–4 of the index antibiotic course).\n\n' +

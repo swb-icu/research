@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
 <title>ABBRUPT Trial &mdash; SWB ICU Research</title>
 <style>
   :root{
@@ -40,6 +41,7 @@
   .btn-link{
     display:inline-block; margin-top:6px; background:var(--blue); color:#fff; text-decoration:none;
     padding:9px 16px; border-radius:6px; font-size:0.85rem; font-weight:600;
+    border:none; font-family:inherit; cursor:pointer;
   }
   .btn-link:hover{background:var(--blue-dark);}
   .btn-link.secondary{background:#fff; color:var(--blue); border:1px solid var(--blue);}
@@ -106,7 +108,7 @@
       <div class="step-body">
         <h3>Complete the training</h3>
         <p>Use this link to access the streamlined eligibility and randomisation training.</p>
-        <a class="btn-link" href="https://bctu-annex.redcap.bham.ac.uk/surveys/?s=ARP7DPCRATAPPLCH" target="_blank" rel="noopener">Start training &rarr;</a>
+        <a class="btn-link" href="https://bctu-annex.redcap.bham.ac.uk/surveys/?s=ARP7DPCRATAPPLCH" target="_blank" rel="noopener noreferrer">Start training &rarr;</a>
       </div>
     </div>
 
@@ -115,7 +117,7 @@
       <div class="step-body">
         <h3>Save your confirmation email</h3>
         <p>Retain or flag your confirmation email &mdash; it contains your unique randomisation link.</p>
-        <span class="hint">Can&rsquo;t find it? Search your inbox for abbrupt@trials.bham.ac.uk</span>
+        <span class="hint">Can&rsquo;t find it? Search your inbox for abbrupt [at] trials.bham.ac.uk</span>
       </div>
     </div>
 
@@ -124,7 +126,7 @@
       <div class="step-body">
         <h3>Notify the research nurses</h3>
         <p>Email the research team once you&rsquo;ve completed training so they can confirm you on the delegation log.</p>
-        <a class="btn-link secondary" href="mailto:m.lukose@nhs.net,eleanor.higgs@nhs.net?subject=ABBRUPT%20training%20completed&body=I%20have%20completed%20the%20ABBRUPT%20streamlined%20eligibility%20and%20randomisation%20training.%0D%0A%0D%0AName%3A%0D%0ARole%3A%0D%0ADate%20completed%3A">Email research nurses &rarr;</a>
+        <button type="button" class="btn-link secondary" onclick="emailResearchNurses()">Email research nurses &rarr;</button>
       </div>
     </div>
   </div>
@@ -132,14 +134,23 @@
   <div class="card">
     <h2>More information</h2>
     <p>Full protocol and study documents are held by the Birmingham Clinical Trials Unit (BCTU) study team. Contact the research team directly for anything not covered here.</p>
-    <a class="btn-link" href="https://www.birmingham.ac.uk/research/bctu/trials/portfolio-v/abbrupt" target="_blank" rel="noopener">Main trial site (Birmingham CTU) &rarr;</a>
-    <a class="btn-link secondary" href="https://www.isrctn.com/ISRCTN59775011" target="_blank" rel="noopener">ISRCTN59775011 &rarr;</a>
+    <a class="btn-link" href="https://www.birmingham.ac.uk/research/bctu/trials/portfolio-v/abbrupt" target="_blank" rel="noopener noreferrer">Main trial site (Birmingham CTU) &rarr;</a>
+    <a class="btn-link secondary" href="https://www.isrctn.com/ISRCTN59775011" target="_blank" rel="noopener noreferrer">ISRCTN59775011 &rarr;</a>
   </div>
 </div>
 
 <footer>
   Page maintained by the local research team. Not a substitute for the trial protocol, Screening Log, or PI sign-off. Trial summary drawn from the public ISRCTN registry (ISRCTN59775011, record last edited 15 Jun 2026), the HRA research summary, and BCTU Protocol V4.0 (20 Jan 2025) (accessed 1 Aug 2026) &mdash; verify against the current approved ABBRUPT protocol for anything used in patient screening or consent.
 </footer>
+
+<script>
+function emailResearchNurses(){
+  const to = ['m.lukose','eleanor.higgs'].map(u => u + '@' + ['nhs','net'].join('.')).join(',');
+  const subject = 'ABBRUPT training completed';
+  const body = 'I have completed the ABBRUPT streamlined eligibility and randomisation training.\r\n\r\nName:\r\nRole:\r\nDate completed:';
+  window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+}
+</script>
 
 </body>
 </html>
