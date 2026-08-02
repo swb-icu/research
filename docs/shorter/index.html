@@ -6,8 +6,8 @@
 <title>SHORTER Trial &mdash; SWB ICU Research</title>
 <style>
   :root{
-    --blue:#0b5394; --blue-dark:#073763; --border:#d5dbe3; --text:#1c2733; --muted:#5a6a7a; --bg:#f4f6f8;
-    --amber:#8a6100; --amber-bg:#fff6e0; --green:#1e7e34; --green-bg:#e6f4ea;
+    --blue:#0b5394; --blue-dark:#073763; --green:#1e7e34; --green-bg:#e6f4ea;
+    --amber:#8a6100; --amber-bg:#fff6e0; --border:#d5dbe3; --text:#1c2733; --muted:#5a6a7a; --bg:#f4f6f8;
   }
   *{box-sizing:border-box;}
   body{
@@ -31,6 +31,19 @@
   }
   .back{display:inline-block; margin-bottom:16px; color:var(--blue); font-size:0.85rem; text-decoration:none; font-weight:600;}
   .back:hover{text-decoration:underline;}
+  .video-wrap{position:relative; width:100%; padding-top:56.25%; border-radius:6px; overflow:hidden; background:#000;}
+  .video-wrap iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:0;}
+  .meta-table{width:100%; border-collapse:collapse; font-size:0.88rem;}
+  .meta-table td{padding:6px 0; vertical-align:top; border-bottom:1px solid #eef1f4;}
+  .meta-table td:first-child{color:var(--muted); font-weight:600; width:170px; padding-right:12px;}
+  .meta-table tr:last-child td{border-bottom:none;}
+  .btn-link{
+    display:inline-block; margin-top:6px; background:var(--blue); color:#fff; text-decoration:none;
+    padding:9px 16px; border-radius:6px; font-size:0.85rem; font-weight:600;
+  }
+  .btn-link:hover{background:var(--blue-dark);}
+  .btn-link.secondary{background:#fff; color:var(--blue); border:1px solid var(--blue);}
+  .btn-link.secondary:hover{background:#f0f5fa;}
   footer{max-width:840px; margin:20px auto 0 auto; padding:0 24px; color:var(--muted); font-size:0.75rem; line-height:1.5;}
 </style>
 </head>
@@ -38,7 +51,7 @@
 
 <header>
   <h1>SHORTER</h1>
-  <p>Trial information coming soon</p>
+  <p>Short-duration vs. standard-duration antibiotics for sepsis in critical care</p>
 </header>
 
 <div class="disclaimer">
@@ -51,12 +64,46 @@
   <div class="card">
     <span class="badge">Recruiting</span>
     <h2 style="margin-top:10px;">About this trial</h2>
-    <p>Full details for SHORTER are being added here. In the meantime, contact the research team for current protocol, eligibility, and status information.</p>
+    <p>SHORTER (A randomised controlled trial of SHORT duration antibiotic thERapy for critically ill patients with sepsis) is a pragmatic, open-label, multicentre, parallel-arm RCT with an internal pilot and an embedded process evaluation. It compares a fixed 5-day course of antibiotics against standard-of-care duration (typically around 9 days) in adult patients admitted to a critical care unit (ICU or HDU) with suspected or confirmed sepsis. The trial only fixes the duration &mdash; choice/combination of antibiotics is left entirely to the treating clinical team, and additional courses can still be prescribed if clinically needed.</p>
+    <p>There are two co-primary outcomes: 28-day all-cause mortality (non-inferiority safety outcome) and total antibiotic treatment days at 28 days (superiority effectiveness outcome). The trial aims to recruit 2,244 participants across up to 50 UK critical care units, phased open over roughly 10 months. Patients can be screened, consented, and randomised during antibiotic treatment days 1&ndash;4 of the index course for sepsis.</p>
+    <table class="meta-table">
+      <tr><td>Chief Investigator</td><td>Dr Thomas P Hellyer (Newcastle University)</td></tr>
+      <tr><td>Sponsor</td><td>The Newcastle upon Tyne Hospitals NHS Foundation Trust</td></tr>
+      <tr><td>Funder</td><td>NIHR HTA Programme (NIHR134101)</td></tr>
+      <tr><td>Registration</td><td>ISRCTN40090372 &middot; IRAS 317788</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Study explainer video</h2>
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/f9hjPUg86xo" title="SHORTER trial explainer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Participant information</h2>
+    <p>The trial team's public-facing pages, including an animated explainer with subtitles for participants, their loved ones, and members of the public. Useful for staff to review too, so you know what patients/families have already seen.</p>
+    <a class="btn-link" href="https://www.shortertrial.com/trial-overview" target="_blank" rel="noopener">Trial overview (shortertrial.com) &rarr;</a>
+    <a class="btn-link secondary" href="https://www.shortertrial.com/who-can-take-part" target="_blank" rel="noopener">Who can take part &rarr;</a>
+  </div>
+
+  <div class="card">
+    <h2>Screening</h2>
+    <p>Use the eligibility tool below to work through the SHORTER inclusion and exclusion criteria at the bedside, including a check on how many days into the index antibiotic course the patient is.</p>
+    <a class="btn-link" href="eligibility-tool/">Open eligibility tool &rarr;</a>
+  </div>
+
+  <div class="card">
+    <h2>More information</h2>
+    <p>Full protocol and study documents are held by the Newcastle Clinical Trials Unit (NCTU) study team. Contact the research team directly for anything not covered here.</p>
+    <a class="btn-link" href="https://www.shortertrial.com/" target="_blank" rel="noopener">Main trial site (shortertrial.com) &rarr;</a>
+    <a class="btn-link secondary" href="https://www.hra.nhs.uk/planning-and-improving-research/application-summaries/research-summaries/shorter-trial/" target="_blank" rel="noopener">HRA research summary &rarr;</a>
   </div>
 </div>
 
 <footer>
-  Page maintained by the local research team. Not a substitute for the trial protocol, Screening Log, or PI sign-off.
+  Page maintained by the local research team. Not a substitute for the trial protocol, Screening Log, or PI sign-off. Trial summary drawn from the public HRA research summary (IRAS 317788, accessed 2 Aug 2026) and the SHORTER Clinical Trial Protocol V4.0 (12 Mar 2024, Newcastle CTU/sponsor Newcastle upon Tyne Hospitals NHS FT) &mdash; verify against the currently approved SHORTER protocol for anything used in patient screening or consent.
 </footer>
 
 </body>

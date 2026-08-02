@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHORTER Eligibility Tool</title>
+<style>
+  :root{
+    --blue:#0b5394; --blue-dark:#073763; --green:#1e7e34; --green-bg:#e6f4ea;
+    --red:#a80000; --red-bg:#fbe8e8; --amber:#8a6100; --amber-bg:#fff6e0;
+    --border:#d5dbe3; --text:#1c2733; --muted:#5a6a7a; --bg:#f4f6f8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text); margin:0; padding:0 0 60px 0;
+  }
+  header{background:var(--blue-dark); color:#fff; padding:20px 24px;}
+  header h1{margin:0 0 4px 0; font-size:1.4rem;}
+  header p{margin:0; font-size:0.85rem; opacity:0.85;}
+  .disclaimer{
+    background:var(--amber-bg); border-bottom:1px solid #e0c46a; color:var(--amber);
+    padding:12px 24px; font-size:0.85rem; line-height:1.4;
+  }
+  .wrap{max-width:840px; margin:0 auto; padding:24px;}
+  .back{display:inline-block; margin-bottom:16px; color:var(--blue); font-size:0.85rem; text-decoration:none; font-weight:600;}
+  .back:hover{text-decoration:underline;}
+  .card{background:#fff; border:1px solid var(--border); border-radius:8px; padding:20px 24px; margin-bottom:18px;}
+  .card h2{font-size:1.05rem; margin:0 0 4px 0; color:var(--blue-dark); display:flex; align-items:center; gap:8px;}
+  .card .sub{color:var(--muted); font-size:0.82rem; margin:0 0 16px 0;}
+  .row{display:flex; flex-wrap:wrap; gap:16px; margin-bottom:14px;}
+  .field{flex:1 1 200px; min-width:160px;}
+  .field label{display:block; font-size:0.82rem; font-weight:600; margin-bottom:4px; color:var(--text);}
+  .field .hint{display:block; font-weight:400; color:var(--muted); font-size:0.75rem; margin-top:2px;}
+  input[type=number]{
+    width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:5px;
+    font-size:0.9rem; background:#fbfcfd;
+  }
+  input[type=number]:focus{outline:2px solid var(--blue); outline-offset:1px;}
+  .yn-toggle{display:flex; gap:8px;}
+  .yn-toggle button{
+    flex:1; background:#fff; color:var(--blue); border:1px solid var(--blue);
+    border-radius:6px; padding:8px 10px; font-size:0.85rem; font-weight:600; cursor:pointer;
+  }
+  .yn-toggle button.active{background:var(--blue); color:#fff;}
+  .excl-item{display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid #eef1f4;}
+  .excl-item:last-child{border-bottom:none;}
+  .excl-item input[type=checkbox]{margin-top:3px; width:16px; height:16px; flex-shrink:0;}
+  .excl-item label{font-size:0.88rem; cursor:pointer;}
+  .excl-item .num{color:var(--muted); font-weight:600; margin-right:4px;}
+  #result{
+    margin:24px auto 0 auto; max-width:840px;
+    border-radius:8px; padding:20px 24px; font-size:1rem; box-shadow:0 2px 10px rgba(0,0,0,0.08);
+    border-width:3px !important; scroll-margin-top:20px;
+  }
+  #result h3{margin:0 0 6px 0; font-size:1.25rem;}
+  #result.flash{animation:flashResult 1s ease-in-out;}
+  @keyframes flashResult{0%,100%{box-shadow:0 2px 10px rgba(0,0,0,0.08);} 50%{box-shadow:0 0 0 6px rgba(11,83,148,0.25);}}
+  #result ul{margin:8px 0 0 0; padding-left:20px; font-size:0.85rem;}
+  .status-eligible{background:var(--green-bg); border:2px solid var(--green); color:#0d3d1a;}
+  .status-ineligible{background:var(--red-bg); border:2px solid var(--red); color:#5c0000;}
+  .status-incomplete{background:#eef1f4; border:2px solid var(--border); color:var(--muted);}
+  button{background:var(--blue); color:#fff; border:none; border-radius:6px; padding:9px 18px; font-size:0.85rem; font-weight:600; cursor:pointer;}
+  button.secondary{background:#fff; color:var(--blue); border:1px solid var(--blue);}
+  .btn-row{display:flex; gap:10px; margin-top:10px;}
+  footer{max-width:840px; margin:20px auto 0 auto; padding:0 24px; color:var(--muted); font-size:0.75rem; line-height:1.5;}
+  .criterion-status{
+    display:inline-block; width:18px; height:18px; border-radius:50%; margin-right:8px;
+    text-align:center; line-height:18px; font-size:0.7rem; font-weight:700; color:#fff; background:var(--border);
+  }
+  .criterion-status.pass{background:var(--green);}
+  .criterion-status.fail{background:var(--red);}
+  .step-banner{font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--blue); margin:0 0 12px 4px;}
+  .gate-card{text-align:center; padding:16px 24px;}
+  .gate-card.status-ineligible{border-color:var(--red);}
+  .card.pass{border-color:var(--green); background:var(--green-bg);}
+  .crit-msg{margin:10px 0 0 0; font-size:0.85rem; font-weight:600;}
+  .crit-msg.pass{color:#0d3d1a;}
+  .crit-msg.fail{color:#5c0000;}
+  .crit-msg.pending{color:var(--muted); font-weight:400;}
+  .note-box{background:#e8f0fa; border:1px solid #bcd4ec; border-radius:6px; padding:10px 14px; font-size:0.82rem; color:var(--blue-dark); margin-bottom:14px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>SHORTER Eligibility Tool</h1>
+  <p>Short-duration vs. standard-duration antibiotics for sepsis in critical care &mdash; bedside reference tool</p>
+</header>
+
+<div class="disclaimer">
+  <strong>Support aid only &mdash; not a substitute for the trial Screening Log or PI sign-off.</strong>
+</div>
+
+<div class="wrap">
+  <a class="back" href="../">&larr; Back to SHORTER</a> &middot; <a class="back" href="../../">Main landing page</a>
+
+  <div class="note-box">
+    Per protocol section 6, only personnel formally delegated to assess eligibility by the Principal Investigator may perform this assessment, and it must be documented in the patient's medical records. Protocol waivers (enrolling a patient who does not meet all criteria) are not permitted.
+  </div>
+
+  <div class="step-banner" id="step1-banner">Step 1 of 2 &mdash; Inclusion criteria</div>
+  <div id="step1">
+
+  <!-- INCLUSION 1: ADULT, CRITICAL CARE SETTING, SEPSIS -->
+  <div class="card" id="card-ind1">
+    <h2><span class="criterion-status" id="ind1-dot">1</span> Adult, in critical care, for sepsis</h2>
+    <p class="sub">Inclusion criterion 1: adult patients, aged &ge;18, treated within a critical care setting (ICU or HDU) for suspected or confirmed sepsis due to either community- or hospital-acquired infections</p>
+    <div class="row">
+      <div class="field">
+        <label for="age">Age (years)</label>
+        <input type="number" id="age" min="0" step="1" oninput="runScreening()" onchange="runScreening()" onkeyup="runScreening()">
+      </div>
+      <div class="field">
+        <label>In a critical care unit (ICU/HDU), being treated for suspected or confirmed sepsis (community- or hospital-acquired)?</label>
+        <div class="yn-toggle">
+          <button type="button" id="settingBtnY" onclick="setYesNo('setting', true)">Yes</button>
+          <button type="button" id="settingBtnN" onclick="setYesNo('setting', false)">No</button>
+        </div>
+        <input type="hidden" id="settingVal" value="">
+      </div>
+    </div>
+    <p class="crit-msg" id="ind1-msg"></p>
+  </div>
+
+  <!-- INCLUSION 2: ORGAN DYSFUNCTION -->
+  <div class="card" id="card-ind2">
+    <h2><span class="criterion-status" id="ind2-dot">2</span> New/worsening organ dysfunction from infection</h2>
+    <p class="sub">Inclusion criterion 2: evidence of new or worsening acute organ dysfunction resulting from suspected or confirmed infection (e.g. the treatment or monitoring of an organ dysfunction)</p>
+    <div class="row">
+      <div class="field">
+        <label>New or worsening acute organ dysfunction resulting from the suspected/confirmed infection?</label>
+        <div class="yn-toggle">
+          <button type="button" id="odBtnY" onclick="setYesNo('od', true)">Yes</button>
+          <button type="button" id="odBtnN" onclick="setYesNo('od', false)">No</button>
+        </div>
+        <input type="hidden" id="odVal" value="">
+      </div>
+    </div>
+    <p class="crit-msg" id="ind2-msg"></p>
+  </div>
+
+  <!-- INCLUSION 3: ANTIBIOTIC TIMING -->
+  <div class="card" id="card-ind3">
+    <h2><span class="criterion-status" id="ind3-dot">3</span> Within antibiotic day 1&ndash;4</h2>
+    <p class="sub">Inclusion criterion 3: antibiotics initiated for suspected or confirmed sepsis, and able to be randomised within 4 days of the initiation of this index course</p>
+    <div class="row">
+      <div class="field">
+        <label for="abxDay">Day of the index antibiotic course for sepsis</label>
+        <input type="number" id="abxDay" min="1" step="1" placeholder="e.g. 2" oninput="runScreening()" onchange="runScreening()" onkeyup="runScreening()">
+        <span class="hint">Day 1 = the day the current course of antibiotics for this sepsis episode started. Eligible for screening/randomisation on days 1&ndash;4 of that course only. If the index course was later reset for a blood-culture-proven resistant organism (protocol 3.3.1), count from the reset date.</span>
+      </div>
+    </div>
+    <p class="crit-msg" id="ind3-msg"></p>
+  </div>
+
+  </div><!-- /step1 -->
+
+  <div class="card gate-card" id="gate-incomplete">
+    <p style="margin:0 0 12px 0; font-size:0.88rem; color:var(--muted);" id="gate-incomplete-text">Complete the three inclusion criteria above, then press &ldquo;Check eligibility&rdquo;.</p>
+    <button onclick="checkEligibility()">Check eligibility &darr;</button>
+  </div>
+
+  <div class="card gate-card status-ineligible" id="gate-ineligible" style="display:none;">
+    <p style="margin:0; font-size:0.9rem;" id="gate-ineligible-text"></p>
+  </div>
+
+  <div class="card gate-card status-eligible" id="gate-complete" style="display:none;">
+    <p style="margin:0 0 12px 0; font-size:0.9rem;">Meets all three inclusion criteria. Exclusion criteria have not been checked yet.</p>
+    <button onclick="continueToStep2()">Continue to exclusion criteria &rarr;</button>
+  </div>
+
+  <div id="step2" style="display:none;">
+  <div class="step-banner">Step 2 of 2 &mdash; Exclusion criteria</div>
+  <div class="btn-row" style="margin-bottom:14px;">
+    <button class="secondary" onclick="backToStep1()">&larr; Back to inclusion criteria</button>
+  </div>
+
+  <div class="card">
+    <h2>Exclusion criteria</h2>
+    <p class="sub">Tick any that apply. Any one ticked makes the patient currently ineligible.</p>
+
+    <div class="excl-item">
+      <input type="checkbox" id="ex1" onchange="updateStep2Live()">
+      <label for="ex1"><span class="num">1.</span> Comorbidity with immunosuppression <span style="color:var(--muted);">(e.g. chemotherapy, maintenance steroids equivalent to &gt;10mg/day of prednisolone, post-transplantation)</span></label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex2" onchange="updateStep2Live()">
+      <label for="ex2"><span class="num">2.</span> Blood neutrophil count &lt;0.5 &times; 10<sup>9</sup>/L secondary to a pre-existing comorbidity</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex3" onchange="updateStep2Live()">
+      <label for="ex3"><span class="num">3.</span> Infection source where usual practice involves more than 14 days of antibiotics <span style="color:var(--muted);">(e.g. undrainable abscess, endocarditis, Staphylococcus aureus bacteraemia, osteomyelitis)</span></label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex4" onchange="updateStep2Live()">
+      <label for="ex4"><span class="num">4.</span> Receiving end-of-life care</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex5" onchange="updateStep2Live()">
+      <label for="ex5"><span class="num">5.</span> Life-sustaining treatment expected to be withdrawn within the next 24 hours</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex6" onchange="updateStep2Live()">
+      <label for="ex6"><span class="num">6.</span> The clinician responsible for the patient&rsquo;s care is unable to adhere to the intervention</label>
+    </div>
+  </div>
+
+  </div><!-- /step2 -->
+
+  <div class="btn-row">
+    <button onclick="checkEligibility()">Check eligibility &darr;</button>
+    <button class="secondary" onclick="resetForm()">Reset all fields</button>
+  </div>
+
+</div>
+
+<div id="result" class="wrap status-incomplete">
+  <h3 id="result-title">Enter values above to check eligibility</h3>
+  <div id="result-detail"></div>
+</div>
+
+<footer>
+  Based on the SHORTER Clinical Trial Protocol V4.0 (12 Mar 2024), Section 6 (pages 28&ndash;29) &mdash; inclusion criteria 6.1, exclusion criteria 6.2.
+  Verify against the currently approved protocol version before use &mdash; criteria may change with amendments. This tool is a local team reference aid,
+  not affiliated with or validated by Newcastle Clinical Trials Unit. Report any suspected discrepancy to your local trial team before relying on it.
+</footer>
+
+<script>
+function num(id){
+  const v = document.getElementById(id).value;
+  return v === "" ? null : parseFloat(v);
+}
+function checked(id){
+  return document.getElementById(id).checked;
+}
+function setDot(id, state){
+  const el = document.getElementById(id);
+  el.classList.remove('pass','fail');
+  if(state === true) el.classList.add('pass');
+  else if(state === false) el.classList.add('fail');
+}
+function setCriterion(dotId, cardId, msgId, state, passText, failText, pendingText){
+  setDot(dotId, state);
+  const card = document.getElementById(cardId);
+  const msg = document.getElementById(msgId);
+  card.classList.remove('pass','fail');
+  msg.classList.remove('pass','fail','pending');
+  if(state === true){
+    card.classList.add('pass');
+    msg.classList.add('pass');
+    msg.textContent = '✓ ' + passText;
+  } else if(state === false){
+    msg.classList.add('fail');
+    msg.textContent = '✗ ' + failText + '.';
+  } else {
+    msg.classList.add('pending');
+    msg.textContent = pendingText;
+  }
+}
+
+function setYesNo(prefix, val){
+  document.getElementById(prefix + 'Val').value = val ? 'y' : 'n';
+  document.getElementById(prefix + 'BtnY').classList.toggle('active', val === true);
+  document.getElementById(prefix + 'BtnN').classList.toggle('active', val === false);
+  runScreening();
+}
+function yesNoVal(prefix){
+  const v = document.getElementById(prefix + 'Val').value;
+  return v === 'y' ? true : (v === 'n' ? false : null);
+}
+
+function setResult(statusClass, title, detailHtml){
+  const resultEl0 = document.getElementById('result');
+  const titleEl0 = document.getElementById('result-title');
+  const detailEl0 = document.getElementById('result-detail');
+  resultEl0.classList.remove('status-eligible','status-ineligible','status-incomplete');
+  resultEl0.classList.add(statusClass);
+  titleEl0.textContent = title;
+  detailEl0.innerHTML = detailHtml;
+}
+
+// Live, per-field feedback only — updates the individual criterion checkmarks.
+// Does NOT touch the coloured verdict (gate cards / #result) — that only
+// changes when checkEligibility() is explicitly run.
+function updateCriteria(){
+  // ---- Inclusion 1: age + critical care setting for sepsis ----
+  const age = num('age');
+  const setting = yesNoVal('setting');
+  const ageOk = age === null ? null : age >= 18;
+  let ind1 = null;
+  if(ageOk === false || setting === false) ind1 = false;
+  else if(ageOk === true && setting === true) ind1 = true;
+  setCriterion('ind1-dot', 'card-ind1', 'ind1-msg', ind1,
+    'Meets criterion (aged ≥18, in ICU/HDU for suspected/confirmed sepsis)',
+    'Does not meet criterion (age <18 and/or not in a qualifying critical care setting for sepsis)',
+    'Enter age and select Yes/No to check');
+
+  // ---- Inclusion 2: new/worsening organ dysfunction from infection ----
+  const od = yesNoVal('od');
+  setCriterion('ind2-dot', 'card-ind2', 'ind2-msg', od,
+    'Meets criterion (new/worsening organ dysfunction from the suspected/confirmed infection)',
+    'Does not meet criterion (no new/worsening organ dysfunction from infection)', 'Select Yes/No to check');
+
+  // ---- Inclusion 3: antibiotic day 1-4 ----
+  const abxDay = num('abxDay');
+  const ind3 = abxDay === null ? null : (abxDay >= 1 && abxDay <= 4);
+  setCriterion('ind3-dot', 'card-ind3', 'ind3-msg', ind3,
+    'Meets criterion (within day 1–4 of the index antibiotic course)',
+    'Does not meet criterion (outside day 1–4 of the index antibiotic course)', 'Enter the antibiotic day to check');
+
+  return { ind1, od, ind3 };
+}
+
+// Called by every STEP 1 field. Editing any of these after a check
+// invalidates it — collapses back to step 1 and resets the verdict to
+// neutral, so it can never show a stale green/red.
+function runScreening(){
+  const c = updateCriteria();
+  step2Opened = false;
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('gate-ineligible').style.display = 'none';
+  document.getElementById('gate-complete').style.display = 'none';
+  document.getElementById('gate-incomplete').style.display = 'block';
+  const allTouched = (c.ind1 !== null || c.od !== null || c.ind3 !== null);
+  document.getElementById('gate-incomplete-text').textContent = allTouched
+    ? 'Values entered/changed — press "Check eligibility" to see the current result.'
+    : 'Complete the three inclusion criteria above, then press "Check eligibility".';
+  setResult('status-incomplete',
+    allTouched ? 'Not yet checked — press "Check eligibility" above' : 'Enter values above, then press "Check eligibility"',
+    '');
+}
+
+// Called by STEP 2 fields (exclusion checkboxes) — keeps the checklist and
+// step 2 visible, just clears the verdict back to neutral until
+// "Check eligibility" is pressed again.
+function updateStep2Live(){
+  updateCriteria();
+  setResult('status-incomplete', 'Values changed — press "Check eligibility" to update the result.', '');
+}
+
+// Explicit verdict — only this function is allowed to show green/red.
+function checkEligibility(){
+  const c = updateCriteria();
+  const { ind1, od, ind3 } = c;
+
+  const inclusionComplete = (ind1 === true && od === true && ind3 === true);
+  const inclusionFailed = (ind1 === false || od === false || ind3 === false);
+  const step2El = document.getElementById('step2');
+  const gateIncompleteEl = document.getElementById('gate-incomplete');
+  const gateIneligibleEl = document.getElementById('gate-ineligible');
+  const gateIneligibleTextEl = document.getElementById('gate-ineligible-text');
+  const gateCompleteEl = document.getElementById('gate-complete');
+
+  if(inclusionFailed){
+    step2Opened = false;
+    step2El.style.display = 'none';
+    gateIncompleteEl.style.display = 'none';
+    gateCompleteEl.style.display = 'none';
+    gateIneligibleEl.style.display = 'block';
+    let reasons = [];
+    if(ind1 === false) reasons.push('not aged &ge;18 and/or not in a qualifying critical care setting for sepsis');
+    if(od === false) reasons.push('no new/worsening organ dysfunction from the infection');
+    if(ind3 === false) reasons.push('outside day 1&ndash;4 of the index antibiotic course');
+    gateIneligibleTextEl.innerHTML = '<strong>Not eligible &mdash; inclusion criteria not met</strong> (' + reasons.join('; ') + '). Exclusion criteria are not applicable; screening stops here.';
+    setResult('status-ineligible', 'Currently NOT ELIGIBLE — inclusion criteria not met',
+      '<ul>' + reasons.map(r => `<li>${r.charAt(0).toUpperCase()+r.slice(1)}</li>`).join('') + '</ul>');
+    return;
+  }
+
+  gateIneligibleEl.style.display = 'none';
+
+  if(!inclusionComplete){
+    step2Opened = false;
+    step2El.style.display = 'none';
+    gateCompleteEl.style.display = 'none';
+    gateIncompleteEl.style.display = 'block';
+    document.getElementById('gate-incomplete-text').textContent = 'Complete the three inclusion criteria above, then press "Check eligibility".';
+    setResult('status-incomplete', 'Step 1 in progress — enter remaining inclusion values', '');
+    return;
+  }
+
+  gateIncompleteEl.style.display = 'none';
+
+  if(!step2Opened){
+    step2El.style.display = 'none';
+    gateCompleteEl.style.display = 'block';
+    setResult('status-eligible', 'Meets inclusion criteria — POTENTIALLY ELIGIBLE (exclusion criteria not yet checked)',
+      '<p style="font-size:0.85rem;">Click "Continue to exclusion criteria" below to complete screening.</p>');
+    return;
+  }
+
+  // step2Opened is true — show exclusion criteria and compute the full result
+  gateCompleteEl.style.display = 'none';
+  step2El.style.display = 'block';
+
+  const exclIds = ['ex1','ex2','ex3','ex4','ex5','ex6'];
+  const exclLabels = {
+    ex1:'Comorbidity with immunosuppression',
+    ex2:'Blood neutrophil count <0.5 × 10⁹/L secondary to a pre-existing comorbidity',
+    ex3:'Infection source where usual practice involves >14 days of antibiotics',
+    ex4:'Receiving end-of-life care',
+    ex5:'Life-sustaining treatment expected to be withdrawn within the next 24 hours',
+    ex6:'Responsible clinician unable to adhere to the intervention'
+  };
+
+  const active = exclIds.filter(id => checked(id)).map(id => exclLabels[id]);
+
+  if(active.length > 0){
+    const html = '<ul>' + active.map(e => `<li>${e}</li>`).join('') + '</ul>';
+    setResult('status-ineligible', 'Currently NOT ELIGIBLE — exclusion criteria present', html);
+    return;
+  }
+
+  setResult('status-eligible', 'Meets inclusion criteria, no exclusions ticked — POTENTIALLY ELIGIBLE',
+    '<div class="advisory">' +
+    '<p style="font-weight:600; margin:10px 0 6px 0;">If proceeding:</p>' +
+    '<ul>' +
+    '<li>Confirm eligibility with the PI or a formally delegated assessor (protocol section 6) and document the assessment in the medical notes and trial Screening Log.</li>' +
+    '<li>Screening, consent, and randomisation must all happen within days 1&ndash;4 of the index antibiotic course for this sepsis episode.</li>' +
+    '<li>Randomise via the trial\'s online randomisation system before confirming the antibiotic duration arm.</li>' +
+    '<li>Protocol waivers are not permitted &mdash; do not enrol if any criterion is not met.</li>' +
+    '<li>Notify your local research team so they can support consent and randomisation.</li>' +
+    '</ul>' +
+    '</div>');
+}
+
+let step2Opened = false;
+
+function continueToStep2(){
+  step2Opened = true;
+  document.getElementById('gate-complete').style.display = 'none';
+  document.getElementById('step2').style.display = 'block';
+  updateCriteria();
+  setResult('status-incomplete', 'Press "Check eligibility" below to complete screening.', '');
+  document.getElementById('step2').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function backToStep1(){
+  step2Opened = false;
+  document.getElementById('step2').style.display = 'none';
+  updateCriteria();
+  document.getElementById('gate-incomplete').style.display = 'none';
+  document.getElementById('gate-ineligible').style.display = 'none';
+  document.getElementById('gate-complete').style.display = 'block';
+  setResult('status-incomplete', 'Not yet checked — press "Check eligibility" above', '');
+  document.getElementById('step1').scrollIntoView({behavior:'smooth'});
+}
+
+function resetForm(){
+  step2Opened = false;
+  document.querySelectorAll('input[type=number]').forEach(el => el.value = '');
+  document.querySelectorAll('input[type=checkbox]').forEach(el => el.checked = false);
+  document.getElementById('settingVal').value = '';
+  document.getElementById('odVal').value = '';
+  document.getElementById('settingBtnY').classList.remove('active');
+  document.getElementById('settingBtnN').classList.remove('active');
+  document.getElementById('odBtnY').classList.remove('active');
+  document.getElementById('odBtnN').classList.remove('active');
+  document.getElementById('step2').style.display = 'none';
+  runScreening();
+}
+
+runScreening();
+</script>
+
+</body>
+</html>
