@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOSAICC Trial &mdash; SWB ICU Research</title>
+<style>
+  :root{
+    --blue:#0b5394; --blue-dark:#073763; --green:#1e7e34; --green-bg:#e6f4ea;
+    --amber:#8a6100; --amber-bg:#fff6e0; --border:#d5dbe3; --text:#1c2733; --muted:#5a6a7a; --bg:#f4f6f8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text); margin:0; padding:0 0 60px 0;
+  }
+  header{background:var(--blue-dark); color:#fff; padding:24px;}
+  header h1{margin:0 0 4px 0; font-size:1.5rem;}
+  header p{margin:0; font-size:0.85rem; opacity:0.85;}
+  .disclaimer{
+    background:var(--amber-bg); border-bottom:1px solid #e0c46a; color:var(--amber);
+    padding:12px 24px; font-size:0.85rem; line-height:1.4;
+  }
+  .wrap{max-width:840px; margin:0 auto; padding:24px;}
+  .card{background:#fff; border:1px solid var(--border); border-radius:8px; padding:20px 24px; margin-bottom:18px;}
+  .card h2{font-size:1.05rem; margin:0 0 10px 0; color:var(--blue-dark);}
+  .card p{font-size:0.9rem; line-height:1.6; margin:0 0 8px 0;}
+  .badge{
+    display:inline-block; font-size:0.7rem; font-weight:700; letter-spacing:0.03em;
+    text-transform:uppercase; padding:2px 9px; border-radius:10px; background:var(--green-bg); color:var(--green);
+  }
+  .badge.setup{background:#eef1f4; color:var(--muted);}
+  .back{display:inline-block; margin-bottom:16px; color:var(--blue); font-size:0.85rem; text-decoration:none; font-weight:600;}
+  .back:hover{text-decoration:underline;}
+  .video-wrap{position:relative; width:100%; padding-top:56.25%; border-radius:6px; overflow:hidden; background:#000;}
+  .video-wrap iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:0;}
+  .video-placeholder{
+    position:relative; width:100%; padding-top:56.25%; border-radius:6px; overflow:hidden;
+    background:#eef1f4; border:1px dashed var(--border);
+  }
+  .video-placeholder-inner{
+    position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center; padding:20px; gap:6px;
+  }
+  .video-placeholder-inner .icon{font-size:1.8rem; opacity:0.5;}
+  .video-placeholder-inner p{margin:0; font-size:0.85rem; color:var(--muted); max-width:420px;}
+  .meta-table{width:100%; border-collapse:collapse; font-size:0.88rem;}
+  .meta-table td{padding:6px 0; vertical-align:top; border-bottom:1px solid #eef1f4;}
+  .meta-table td:first-child{color:var(--muted); font-weight:600; width:170px; padding-right:12px;}
+  .meta-table tr:last-child td{border-bottom:none;}
+  .btn-link{
+    display:inline-block; margin-top:6px; background:var(--blue); color:#fff; text-decoration:none;
+    padding:9px 16px; border-radius:6px; font-size:0.85rem; font-weight:600;
+  }
+  .btn-link:hover{background:var(--blue-dark);}
+  .btn-link.secondary{background:#fff; color:var(--blue); border:1px solid var(--blue);}
+  .btn-link.secondary:hover{background:#f0f5fa;}
+  footer{max-width:840px; margin:20px auto 0 auto; padding:0 24px; color:var(--muted); font-size:0.75rem; line-height:1.5;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>MOSAICC</h1>
+  <p>Sodium bicarbonate for metabolic acidosis with acute kidney injury in critical care</p>
+</header>
+
+<div class="disclaimer">
+  <strong>Local team reference only.</strong> Verify against the currently approved protocol before relying on anything shown here.
+</div>
+
+<div class="wrap">
+  <a class="back" href="../">&larr; Back to all trials</a>
+
+  <div class="card">
+    <span class="badge setup">Trial in set up stages</span>
+    <h2 style="margin-top:10px;">About this trial</h2>
+    <p>MOSAICC (Multicentre evaluation Of Sodium bicarbonate in Acute kidney Injury in Critical Care) is a multicentre, open-label, randomised controlled trial evaluating the clinical and cost-effectiveness of intravenous sodium bicarbonate for critically ill adults with metabolic acidosis and acute kidney injury (AKI). Around half of the ~184,000 adults admitted to UK critical care each year develop AKI, and the resulting acidosis carries a very poor prognosis (90-day mortality around 59%). Kidney replacement therapy is the current mainstay treatment, but it is invasive and resource-intensive; sodium bicarbonate is a cheap, accessible alternative with limited high-quality evidence behind it.</p>
+    <p>Eligible patients are randomised to IV sodium bicarbonate or no sodium bicarbonate, with follow-up at 28 days, 90 days, and 1 year. The primary outcome is all-cause mortality at 90 days; cost-effectiveness (incremental cost, QALYs, net monetary benefit) is assessed alongside. The trial aims to recruit 2,250 patients from 60 NHS critical care units across the UK, and is open nationally &mdash; this site is still in set-up and not yet recruiting locally.</p>
+    <table class="meta-table">
+      <tr><td>Chief Investigators</td><td>Prof Lui Forni (University of Surrey) &amp; Prof Nick Selby (University of Nottingham)</td></tr>
+      <tr><td>Principal Investigator</td><td>Prof Jon Hulme</td></tr>
+      <tr><td>Sponsor</td><td>University Hospitals of Derby and Burton NHS Foundation Trust</td></tr>
+      <tr><td>Funder</td><td>NIHR HTA Programme (NIHR129617)</td></tr>
+      <tr><td>Registration</td><td>ISRCTN14027629 &middot; IRAS 1003836</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Study explainer video</h2>
+    <div class="video-placeholder">
+      <div class="video-placeholder-inner">
+        <span class="icon">&#9654;</span>
+        <p>No study explainer video published yet. This space will be updated once one is available &mdash; check back once the site is live.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Screening</h2>
+    <p>A local eligibility aid implementing the MOSAICC inclusion and exclusion criteria (including the AKI KDIGO stage 2/3 checks and a baseline creatinine estimator) is already built and available to use ahead of site opening.</p>
+    <a class="btn-link" href="../mosaicc-eligibility-tool/">Open eligibility tool &rarr;</a>
+  </div>
+
+  <div class="card">
+    <h2>More information</h2>
+    <p>Full protocol and study documents are held by the ICNARC Clinical Trials Unit study team. Contact the research team directly for anything not covered here.</p>
+    <a class="btn-link" href="https://www.icnarc.org/research-studies/mosaicc/" target="_blank" rel="noopener">Main trial site (icnarc.org) &rarr;</a>
+    <a class="btn-link secondary" href="https://www.isrctn.com/ISRCTN14027629" target="_blank" rel="noopener">ISRCTN14027629 &rarr;</a>
+  </div>
+</div>
+
+<footer>
+  Page maintained by the local research team. Not a substitute for the trial protocol, Screening Log, or PI sign-off. Trial summary drawn from the ICNARC study page and the public HRA research summary (IRAS 1003836, accessed 2 Aug 2026) &mdash; verify against the current approved MOSAICC protocol for anything used in patient screening or consent. Note: ICNARC currently lists MOSAICC Protocol V7.0 (13 Jan 2026), while the local eligibility tool implements criteria from V6.0 (20 Feb 2025) &mdash; check for criteria changes in the newer version before relying on the eligibility tool, and flag to the local team if an update is needed.
+</footer>
+
+</body>
+</html>
