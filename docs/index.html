@@ -47,6 +47,9 @@
     text-align:center; flex:0 0 auto; white-space:nowrap;
   }
   .btn:hover{background:var(--blue-dark);}
+  .btn.disabled{
+    background:#dde2e7; color:#8a97a4; cursor:not-allowed; pointer-events:none;
+  }
   .top-link{display:inline-block; margin-bottom:10px; color:var(--blue); font-weight:600; font-size:0.85rem; text-decoration:none;}
   .top-link:hover{text-decoration:underline;}
   .team-card{background:#fff; border:1px solid var(--border); border-radius:8px; padding:12px 20px; margin-top:14px;}
@@ -108,7 +111,7 @@
         <h2>MOSAICC</h2>
       </div>
       <p>Sodium bicarbonate vs. no sodium bicarbonate for metabolic acidosis with acute kidney injury in critically ill adults &mdash; site not yet recruiting.</p>
-      <a class="btn" href="mosaicc/">View trial &rarr;</a>
+      <span class="btn disabled" aria-disabled="true">Not yet available</span>
     </div>
 
     <div class="bar">
