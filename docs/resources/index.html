@@ -33,7 +33,18 @@
     padding:9px 16px; border-radius:6px; font-size:0.85rem; font-weight:600;
   }
   .btn-link:hover{background:var(--blue-dark);}
+  .btn-link.secondary{background:#fff; color:var(--blue); border:1px solid var(--blue);}
+  .btn-link.secondary:hover{background:#f0f5fa;}
   footer{max-width:840px; margin:20px auto 0 auto; padding:0 24px; color:var(--muted); font-size:0.75rem; line-height:1.5;}
+  .step{display:flex; gap:12px; margin-bottom:16px;}
+  .step:last-child{margin-bottom:0;}
+  .step-num{
+    flex-shrink:0; width:24px; height:24px; border-radius:50%; background:var(--blue); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:700;
+  }
+  .step-body h3{margin:0 0 4px 0; font-size:0.92rem; color:var(--blue-dark);}
+  .step-body p{margin:0 0 8px 0; font-size:0.85rem; line-height:1.5; color:var(--text);}
+  .step-body .hint{display:block; font-size:0.78rem; color:var(--muted); margin-top:4px;}
 </style>
 </head>
 <body>
@@ -55,11 +66,54 @@
     <p class="sub">Good Clinical Practice (GCP) training, hosted by NIHR.</p>
     <a class="btn-link" href="https://www.nihr.ac.uk/career-development/clinical-research-courses-and-support/good-clinical-practice" target="_blank" rel="noopener">Good Clinical Practice (GCP) | NIHR &rarr;</a>
   </div>
+
+  <div class="card">
+    <h2>ICU staff: complete your ABBRUPT training</h2>
+    <p class="sub">Before screening or randomising a patient for ABBRUPT, ICU staff need to complete the trial&rsquo;s streamlined eligibility and randomisation training.</p>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Complete the training</h3>
+        <p>Use this link to access the streamlined eligibility and randomisation training.</p>
+        <a class="btn-link" href="https://bctu-annex.redcap.bham.ac.uk/surveys/?s=ARP7DPCRATAPPLCH" target="_blank" rel="noopener noreferrer">Start training &rarr;</a>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Save your confirmation email</h3>
+        <p>Retain or flag your confirmation email &mdash; it contains your unique randomisation link.</p>
+        <span class="hint">Can&rsquo;t find it? Search your inbox for abbrupt [at] trials.bham.ac.uk</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Notify the research nurses</h3>
+        <p>Email the research team once you&rsquo;ve completed training so they can confirm you on the delegation log.</p>
+        <button type="button" class="btn-link secondary" onclick="emailResearchNurses()">Email research nurses &rarr;</button>
+      </div>
+    </div>
+
+    <p class="sub" style="margin-top:14px;"><a href="../abbrupt/">View the full ABBRUPT trial page &rarr;</a></p>
+  </div>
 </div>
 
 <footer>
   Not affiliated with or validated by any trial's coordinating centre unless stated otherwise. Local team reference only &mdash; verify against the currently approved protocol before acting on anything shown here.
 </footer>
+
+<script>
+function emailResearchNurses(){
+  const to = ['m.lukose','eleanor.higgs'].map(u => u + '@' + ['nhs','net'].join('.')).join(',');
+  const subject = 'ABBRUPT training completed';
+  const body = 'I have completed the ABBRUPT streamlined eligibility and randomisation training.\r\n\r\nName:\r\nRole:\r\nDate completed:';
+  window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+}
+</script>
 
 </body>
 </html>
