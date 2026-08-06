@@ -52,6 +52,29 @@
   }
   .top-link{display:inline-block; margin-bottom:10px; color:var(--blue); font-weight:600; font-size:0.85rem; text-decoration:none;}
   .top-link:hover{text-decoration:underline;}
+  .resources-link{
+    display:inline-flex; align-items:center; gap:7px; margin:0 0 10px 20px;
+    background:linear-gradient(135deg,var(--blue),#2f8fd6); color:#fff; font-weight:700;
+    font-size:0.85rem; text-decoration:none; padding:8px 16px; border-radius:20px;
+    box-shadow:0 0 0 rgba(11,83,148,0.5);
+    animation:glow-pulse 2.4s ease-in-out infinite;
+  }
+  .resources-link:hover{background:linear-gradient(135deg,var(--blue-dark),var(--blue));}
+  .resources-link .sparkle{display:inline-block; animation:twinkle 1.6s ease-in-out infinite;}
+  .resources-link .sparkle.s2{animation-delay:0.5s;}
+  @keyframes glow-pulse{
+    0%{box-shadow:0 0 0 0 rgba(47,143,214,0.55);}
+    70%{box-shadow:0 0 0 9px rgba(47,143,214,0);}
+    100%{box-shadow:0 0 0 0 rgba(47,143,214,0);}
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:1; transform:scale(1) rotate(0deg);}
+    50%{opacity:0.4; transform:scale(0.7) rotate(15deg);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .resources-link{animation:none;}
+    .resources-link .sparkle{animation:none;}
+  }
   .team-card{background:#fff; border:1px solid var(--border); border-radius:8px; padding:12px 20px; margin-top:14px;}
   .team-card h2{font-size:0.98rem; margin:0 0 6px 0; color:var(--blue-dark);}
   .meta-table{width:100%; border-collapse:collapse; font-size:0.85rem;}
@@ -85,7 +108,7 @@
 
 <div class="wrap">
   <a class="top-link" href="videos/">&#9654; View all study videos</a>
-  <a class="top-link" href="resources/" style="margin-left:20px;">&#8505; Resources &amp; info</a>
+  <a class="resources-link" href="resources/"><span class="sparkle">&#10024;</span> Resources &amp; info <span class="sparkle s2">&#10024;</span></a>
   <div class="bars">
 
     <div class="bar">
