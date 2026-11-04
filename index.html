@@ -4,121 +4,672 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>RELEASE Trial &mdash; SWB ICU Research</title>
+<title>RELEASE Eligibility Tool</title>
 <style>
   :root{
     --blue:#0b5394; --blue-dark:#073763; --green:#1e7e34; --green-bg:#e6f4ea;
-    --amber:#8a6100; --amber-bg:#fff6e0; --border:#d5dbe3; --text:#1c2733; --muted:#5a6a7a; --bg:#f4f6f8;
+    --red:#a80000; --red-bg:#fbe8e8; --amber:#8a6100; --amber-bg:#fff6e0;
+    --border:#d5dbe3; --text:#1c2733; --muted:#5a6a7a; --bg:#f4f6f8;
   }
   *{box-sizing:border-box;}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     background:var(--bg); color:var(--text); margin:0; padding:0 0 60px 0;
   }
-  header{background:var(--blue-dark); color:#fff; padding:24px;}
-  header h1{margin:0 0 4px 0; font-size:1.5rem;}
+  header{background:var(--blue-dark); color:#fff; padding:20px 24px;}
+  header h1{margin:0 0 4px 0; font-size:1.4rem;}
   header p{margin:0; font-size:0.85rem; opacity:0.85;}
   .disclaimer{
     background:var(--amber-bg); border-bottom:1px solid #e0c46a; color:var(--amber);
     padding:12px 24px; font-size:0.85rem; line-height:1.4;
   }
   .wrap{max-width:840px; margin:0 auto; padding:24px;}
-  .card{background:#fff; border:1px solid var(--border); border-radius:8px; padding:20px 24px; margin-bottom:18px;}
-  .card h2{font-size:1.05rem; margin:0 0 10px 0; color:var(--blue-dark);}
-  .card p{font-size:0.9rem; line-height:1.6; margin:0 0 8px 0;}
-  .need-to-know{
-    font-size:0.92rem; line-height:1.5; margin:0 0 12px 0; padding:10px 14px;
-    background:#eef4fa; border-left:3px solid var(--blue); border-radius:4px;
-  }
-  .key-points{margin:0 0 8px 0; padding-left:20px;}
-  .key-points li{font-size:0.88rem; line-height:1.55; margin-bottom:6px;}
-  .badge{
-    display:inline-block; font-size:0.7rem; font-weight:700; letter-spacing:0.03em;
-    text-transform:uppercase; padding:2px 9px; border-radius:10px; background:var(--green-bg); color:var(--green);
-  }
   .back{display:inline-block; margin-bottom:16px; color:var(--blue); font-size:0.85rem; text-decoration:none; font-weight:600;}
   .back:hover{text-decoration:underline;}
-  .video-wrap{position:relative; width:100%; padding-top:56.25%; border-radius:6px; overflow:hidden; background:#000;}
-  .video-wrap iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:0;}
-  .meta-table{width:100%; border-collapse:collapse; font-size:0.88rem;}
-  .meta-table td{padding:6px 0; vertical-align:top; border-bottom:1px solid #eef1f4;}
-  .meta-table td:first-child{color:var(--muted); font-weight:600; width:170px; padding-right:12px;}
-  .meta-table tr:last-child td{border-bottom:none;}
-  .btn-link{
-    display:inline-block; margin-top:6px; background:var(--blue); color:#fff; text-decoration:none;
-    padding:9px 16px; border-radius:6px; font-size:0.85rem; font-weight:600;
+  .card{background:#fff; border:1px solid var(--border); border-radius:8px; padding:20px 24px; margin-bottom:18px;}
+  .card h2{font-size:1.05rem; margin:0 0 4px 0; color:var(--blue-dark); display:flex; align-items:center; gap:8px;}
+  .card .sub{color:var(--muted); font-size:0.82rem; margin:0 0 16px 0;}
+  .row{display:flex; flex-wrap:wrap; gap:16px; margin-bottom:14px;}
+  .field{flex:1 1 200px; min-width:160px;}
+  .field-sm{flex:0 1 110px; min-width:90px;}
+  .field label{display:block; font-size:0.82rem; font-weight:600; margin-bottom:4px; color:var(--text);}
+  .field .hint{display:block; font-weight:400; color:var(--muted); font-size:0.75rem; margin-top:2px;}
+  input[type=number], input[type=date], input[type=time], input[type=text], select{
+    width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:5px;
+    font-size:0.9rem; background:#fbfcfd;
   }
-  .btn-link:hover{background:var(--blue-dark);}
-  .btn-link.secondary{background:#fff; color:var(--blue); border:1px solid var(--blue);}
-  .btn-link.secondary:hover{background:#f0f5fa;}
+  input[type=number]:focus, input[type=date]:focus, input[type=time]:focus, select:focus{outline:2px solid var(--blue); outline-offset:1px;}
+  input[disabled]{background:#eef1f4; color:var(--muted); cursor:not-allowed;}
+  .field .dt-row{display:flex; gap:8px;}
+  .field .dt-row input{flex:1;}
+  .yn-toggle{display:flex; gap:8px;}
+  .yn-toggle button{
+    flex:1; background:#fff; color:var(--blue); border:1px solid var(--blue);
+    border-radius:6px; padding:8px 10px; font-size:0.85rem; font-weight:600; cursor:pointer;
+  }
+  .yn-toggle button.active{background:var(--blue); color:#fff;}
+  .pf-result{
+    margin-top:10px; padding:12px 14px; background:#f4f6f8; border:1px solid var(--border);
+    border-radius:6px; font-size:0.85rem;
+  }
+  .pf-result .big{font-size:1.3rem; font-weight:700; color:var(--blue-dark);}
+  .subcheck{font-size:0.82rem; margin-top:4px;}
+  .subcheck.pass{color:#0d3d1a;}
+  .subcheck.fail{color:#5c0000;}
+  .subcheck.pending{color:var(--muted);}
+  .excl-item{display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid #eef1f4;}
+  .excl-item:last-child{border-bottom:none;}
+  .excl-item input[type=checkbox]{margin-top:3px; width:16px; height:16px; flex-shrink:0;}
+  .excl-item label{font-size:0.88rem; cursor:pointer;}
+  .excl-item .num{color:var(--muted); font-weight:600; margin-right:4px;}
+  .excl-sub{margin-left:28px; padding:6px 0 2px 0;}
+  .excl-sub .excl-item{padding:6px 0; border-bottom:none;}
+  .dynamic-tag{
+    display:inline-block; font-size:0.68rem; font-weight:700; color:var(--amber);
+    background:var(--amber-bg); border:1px solid #e0c46a; border-radius:10px;
+    padding:1px 7px; margin-left:6px; vertical-align:middle;
+  }
+  .resolve-tag{
+    display:inline-block; font-size:0.68rem; font-weight:700; color:var(--blue);
+    background:#e8f0fa; border:1px solid #bcd4ec; border-radius:10px;
+    padding:1px 7px; margin-left:6px; vertical-align:middle;
+  }
+  #result{
+    margin:24px auto 0 auto; max-width:840px;
+    border-radius:8px; padding:20px 24px; font-size:1rem; box-shadow:0 2px 10px rgba(0,0,0,0.08);
+    border-width:3px !important; scroll-margin-top:20px;
+  }
+  #result h3{margin:0 0 6px 0; font-size:1.25rem;}
+  #result.flash{animation:flashResult 1s ease-in-out;}
+  @keyframes flashResult{0%,100%{box-shadow:0 2px 10px rgba(0,0,0,0.08);} 50%{box-shadow:0 0 0 6px rgba(11,83,148,0.25);}}
+  #result ul{margin:8px 0 0 0; padding-left:20px; font-size:0.85rem;}
+  .status-eligible{background:var(--green-bg); border:2px solid var(--green); color:#0d3d1a;}
+  .status-ineligible{background:var(--red-bg); border:2px solid var(--red); color:#5c0000;}
+  .status-incomplete{background:#eef1f4; border:2px solid var(--border); color:var(--muted);}
+  button{background:var(--blue); color:#fff; border:none; border-radius:6px; padding:9px 18px; font-size:0.85rem; font-weight:600; cursor:pointer;}
+  button.secondary{background:#fff; color:var(--blue); border:1px solid var(--blue);}
+  .btn-row{display:flex; gap:10px; margin-top:10px;}
   footer{max-width:840px; margin:20px auto 0 auto; padding:0 24px; color:var(--muted); font-size:0.75rem; line-height:1.5;}
+  .criterion-status{
+    display:inline-block; width:18px; height:18px; border-radius:50%; margin-right:8px;
+    text-align:center; line-height:18px; font-size:0.7rem; font-weight:700; color:#fff; background:var(--border);
+  }
+  .criterion-status.pass{background:var(--green);}
+  .criterion-status.fail{background:var(--red);}
+  .step-banner{font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--blue); margin:0 0 12px 4px;}
+  .gate-card{text-align:center; padding:16px 24px;}
+  .gate-card.status-ineligible{border-color:var(--red);}
+  .card.pass{border-color:var(--green); background:var(--green-bg);}
+  .crit-msg{margin:10px 0 0 0; font-size:0.85rem; font-weight:600;}
+  .crit-msg.pass{color:#0d3d1a;}
+  .crit-msg.fail{color:#5c0000;}
+  .crit-msg.pending{color:var(--muted); font-weight:400;}
+  .note-box{background:#e8f0fa; border:1px solid #bcd4ec; border-radius:6px; padding:10px 14px; font-size:0.82rem; color:var(--blue-dark); margin-bottom:14px;}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>RELEASE</h1>
-  <p>Airway Pressure Release Ventilation vs. conventional ventilation</p>
+  <h1>RELEASE Eligibility Tool</h1>
+  <p>APRV vs conventional ventilation for moderate&ndash;severe acute hypoxaemic respiratory failure &mdash; bedside reference tool</p>
 </header>
 
 <div class="disclaimer">
-  <strong>Local team reference only.</strong> Verify against the currently approved protocol before relying on anything shown here.
+  <strong>Support aid only &mdash; not a substitute for the trial Screening Log or PI sign-off.</strong>
 </div>
 
 <div class="wrap">
-  <a class="back" href="../">&larr; Back to all trials</a>
+  <a class="back" href="../">&larr; Back to RELEASE</a> &middot; <a class="back" href="../../">Main landing page</a>
 
-  <div class="card">
-    <span class="badge">Recruiting</span>
-    <h2 style="margin-top:10px;">About this trial</h2>
-    <div class="need-to-know"><strong>Need to know:</strong> APRV vs. conventional ventilation in moderate&ndash;severe acute hypoxaemic respiratory failure &mdash; testing whether an alternative ventilation mode reduces time on the ventilator.</div>
-    <ul class="key-points">
-      <li>Multicentre, pragmatic RCT</li>
-      <li>Compares early Airway Pressure Release Ventilation (APRV) vs. conventional lung-protective invasive mechanical ventilation (IMV)</li>
-      <li>APRV uses a longer inspiration with a brief expiration &mdash; may reduce ventilator-induced lung injury by maintaining lung volume and limiting excessive stretch/collapse</li>
-      <li>Primary outcome: duration of invasive mechanical ventilation (to first successful unassisted breathing, or death)</li>
-      <li>Target 710 participants across UK sites</li>
-      <li>Recruiting since February 2025, continuing to May 2027</li>
-    </ul>
-    <table class="meta-table">
-      <tr><td>Chief Investigators</td><td>Prof Luigi Camporota, Prof Danny McAuley</td></tr>
-      <tr><td>Principal Investigator</td><td>Prof Jon Hulme</td></tr>
-      <tr><td>Sponsor</td><td>University of Warwick</td></tr>
-      <tr><td>Funder</td><td>NIHR HTA Programme (NIHR154501)</td></tr>
-      <tr><td>Registration</td><td>ISRCTN17158033</td></tr>
-    </table>
+  <div class="step-banner" id="step1-banner">Step 1 of 2 &mdash; Inclusion criteria</div>
+  <div id="step1">
+
+  <!-- INCLUSION 1: AGE -->
+  <div class="card" id="card-ind1">
+    <h2><span class="criterion-status" id="ind1-dot">1</span> Adult</h2>
+    <p class="sub">Inclusion criterion 1: aged &ge;18 years</p>
+    <div class="row">
+      <div class="field">
+        <label for="age">Age (years)</label>
+        <input type="number" id="age" min="0" step="1" oninput="runScreening()" onchange="runScreening()" onkeyup="runScreening()">
+      </div>
+    </div>
+    <p class="crit-msg" id="ind1-msg"></p>
+  </div>
+
+  <!-- INCLUSION 2: RECEIVING IMV -->
+  <div class="card" id="card-ind2">
+    <h2><span class="criterion-status" id="ind2-dot">2</span> Receiving invasive mechanical ventilation</h2>
+    <p class="sub">Inclusion criterion 2</p>
+    <div class="row">
+      <div class="field">
+        <label>Currently receiving IMV?</label>
+        <div class="yn-toggle">
+          <button type="button" id="imvBtnY" onclick="setYesNo('imv', true)">Yes</button>
+          <button type="button" id="imvBtnN" onclick="setYesNo('imv', false)">No</button>
+        </div>
+        <input type="hidden" id="imvVal" value="">
+      </div>
+    </div>
+    <p class="crit-msg" id="ind2-msg"></p>
+  </div>
+
+  <!-- INCLUSION 3: P:F RATIO -->
+  <div class="card" id="card-ind3">
+    <h2><span class="criterion-status" id="ind3-dot">3</span> Moderate&ndash;severe AHRF (P:F ratio calculator)</h2>
+    <p class="sub">Inclusion criterion 3: single measurement showing PaO&#8322;/FiO&#8322; ratio &lt;20 kPa while on PEEP &ge;5 cmH&#8322;O, assessed at any point within the first 60 hours after IMV initiation</p>
+
+    <div class="note-box">
+      <strong>Use the standard PaO&#8322;, not the temperature-corrected value.</strong> Enter the PaO&#8322; reported by the blood gas analyser at 37&deg;C. The conventional PaO&#8322;/FiO&#8322; thresholds used for ARDS classification and trial eligibility are based on this value. The temperature-corrected PaO&#8322; is a calculated estimate adjusted to the patient&rsquo;s actual body temperature, not a separate direct measurement, so using it could introduce temperature-dependent variation and move a patient across the eligibility threshold. Using the standard value keeps screening consistent across patients and sites.
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="pao2">PaO&#8322; (kPa)</label>
+        <input type="number" id="pao2" step="0.1" placeholder="e.g. 9.5" oninput="runScreening()" onchange="runScreening()" onkeyup="runScreening()">
+        <span class="hint">Analyser value at 37&deg;C (not temperature-corrected)</span>
+      </div>
+      <div class="field">
+        <label for="ph">Arterial pH</label>
+        <input type="number" id="ph" step="0.01" placeholder="e.g. 7.28" oninput="updateStep2Live()" onchange="updateStep2Live()" onkeyup="updateStep2Live()">
+        <span class="hint">On the ABG assessed for trial inclusion &mdash; excludes if &lt;7.20</span>
+      </div>
+      <div class="field">
+        <label for="fio2">% oxygen being administered</label>
+        <input type="number" id="fio2" min="21" max="100" step="1" placeholder="e.g. 60" oninput="runScreening()" onchange="runScreening()" onkeyup="runScreening()">
+        <span class="hint">Enter as a percentage (21&ndash;100)</span>
+      </div>
+      <div class="field">
+        <label for="fio2Fraction">FiO&#8322; (fraction)</label>
+        <input type="text" id="fio2Fraction" readonly disabled placeholder="&mdash;">
+        <span class="hint">Calculated automatically &mdash; % &divide; 100</span>
+      </div>
+    </div>
+    <div class="pf-result" id="pf-result">
+      <span id="pf-value">Enter PaO&#8322; and % oxygen administered to calculate the P:F ratio.</span>
+    </div>
+    <p class="subcheck pending" id="pf-check-ratio"></p>
+
+    <div class="row">
+      <div class="field field-sm">
+        <label for="peep">PEEP (cmH&#8322;O)</label>
+        <input type="number" id="peep" step="0.5" oninput="runScreening()" onchange="runScreening()" onkeyup="runScreening()">
+        <span class="hint">&ge;5 to count</span>
+      </div>
+      <div class="field">
+        <label for="imvDate">IMV started (date and time)</label>
+        <div class="dt-row">
+          <input type="date" id="imvDate" oninput="runScreening()" onchange="runScreening()">
+          <input type="time" id="imvTime" oninput="runScreening()" onchange="runScreening()">
+        </div>
+      </div>
+      <div class="field">
+        <label for="imvHours">Hours since intubation</label>
+        <input type="text" id="imvHours" readonly disabled placeholder="&mdash;">
+        <span class="hint">Calculated automatically &mdash; must be &le;60h</span>
+      </div>
+    </div>
+    <p class="subcheck pending" id="pf-check-peep"></p>
+    <p class="subcheck pending" id="pf-check-timing"></p>
+
+    <p class="crit-msg" id="ind3-msg"></p>
+  </div>
+
+  <!-- INCLUSION 4: EXPECTED >48H -->
+  <div class="card" id="card-ind4">
+    <h2><span class="criterion-status" id="ind4-dot">4</span> Expected to remain on IMV &gt;48 hours</h2>
+    <p class="sub">Inclusion criterion 4 &mdash; clinical judgement of the treating team</p>
+    <div class="row">
+      <div class="field">
+        <label>Expected to stay on IMV for more than 48 hours?</label>
+        <div class="yn-toggle">
+          <button type="button" id="expBtnY" onclick="setYesNo('exp', true)">Yes</button>
+          <button type="button" id="expBtnN" onclick="setYesNo('exp', false)">No</button>
+        </div>
+        <input type="hidden" id="expVal" value="">
+      </div>
+    </div>
+    <p class="crit-msg" id="ind4-msg"></p>
+  </div>
+
+  </div><!-- /step1 -->
+
+  <div class="card gate-card" id="gate-incomplete">
+    <p style="margin:0 0 12px 0; font-size:0.88rem; color:var(--muted);" id="gate-incomplete-text">Complete the four inclusion criteria above, then press &ldquo;Check eligibility&rdquo;.</p>
+    <button onclick="checkEligibility()">Check eligibility &darr;</button>
+  </div>
+
+  <div class="card gate-card status-ineligible" id="gate-ineligible" style="display:none;">
+    <p style="margin:0; font-size:0.9rem;" id="gate-ineligible-text"></p>
+  </div>
+
+  <div class="card gate-card status-eligible" id="gate-complete" style="display:none;">
+    <p style="margin:0 0 12px 0; font-size:0.9rem;">Meets all four inclusion criteria. Exclusion criteria have not been checked yet.</p>
+    <button onclick="continueToStep2()">Continue to exclusion criteria &rarr;</button>
+  </div>
+
+  <div id="step2" style="display:none;">
+  <div class="step-banner">Step 2 of 2 &mdash; Exclusion criteria</div>
+  <div class="btn-row" style="margin-bottom:14px;">
+    <button class="secondary" onclick="backToStep1()">&larr; Back to inclusion criteria</button>
+  </div>
+
+  <div class="note-box">
+    Items marked <span class="resolve-tag">may resolve</span> are, per protocol, ones the patient can still be recruited for if the issue resolves and they remain within the eligibility window (&lt;60 hours of IMV). Re-check these at the time of consent/randomisation, not just at first screening.
   </div>
 
   <div class="card">
-    <h2>Study explainer video</h2>
-    <div class="video-wrap">
-      <iframe src="https://www.youtube.com/embed/Np6HT_PPHKM" title="RELEASE trial explainer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    <h2>Exclusion criteria</h2>
+    <p class="sub">Tick any that apply. Any one ticked (or the pH entered in Criterion 3) makes the patient currently ineligible.</p>
+
+    <div class="excl-item">
+      <input type="checkbox" id="ex1" disabled>
+      <label for="ex1"><span class="num">1.</span> Receiving IMV &ge;60 hours at time of screening (unable to deliver early APRV) <span class="dynamic-tag">auto &mdash; from IMV start date/time entered in Criterion 3 above</span></label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex2" onchange="updateStep2Live()">
+      <label for="ex2"><span class="num">2.</span> Primary reason for IMV is one of the following:</label>
+    </div>
+    <div class="excl-sub">
+      <div class="excl-item"><input type="checkbox" id="ex2a" onchange="updateStep2Live()"><label for="ex2a">a. Asthma</label></div>
+      <div class="excl-item"><input type="checkbox" id="ex2b" onchange="updateStep2Live()"><label for="ex2b">b. Severe Chronic Obstructive Pulmonary Disease (COPD)</label></div>
+      <div class="excl-item"><input type="checkbox" id="ex2c" onchange="updateStep2Live()"><label for="ex2c">c. Pulmonary embolism (massive or sub-massive)</label></div>
+      <div class="excl-item"><input type="checkbox" id="ex2d" onchange="updateStep2Live()"><label for="ex2d">d. Existing neuromuscular disease (e.g. Motor Neurone Disease, Guillain Barr&eacute;, Myasthenia Gravis)</label></div>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex3" onchange="updateStep2Live()">
+      <label for="ex3"><span class="num">3.</span> Refractory shock (systolic BP &lt;90 mmHg despite fluid administration and vasoactive drugs) <span class="resolve-tag">may resolve</span></label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex4" disabled>
+      <label for="ex4"><span class="num">4.</span> Severe hypercapnic respiratory acidosis (pH &lt;7.20) <span class="dynamic-tag">auto &mdash; from pH entered in Criterion 3 above</span> <span class="resolve-tag">may resolve</span></label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex5" onchange="updateStep2Live()">
+      <label for="ex5"><span class="num">5.</span> Ongoing air leak (e.g. unresolved pneumothorax at time of screening) <span class="resolve-tag">may resolve</span></label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex6" onchange="updateStep2Live()">
+      <label for="ex6"><span class="num">6.</span> Traumatic brain injury with uncontrolled intracranial hypertension <span class="resolve-tag">may resolve</span></label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex7" onchange="updateStep2Live()">
+      <label for="ex7"><span class="num">7.</span> Likely death or treatment withdrawal in next 24 hours</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex8" onchange="updateStep2Live()">
+      <label for="ex8"><span class="num">8.</span> Home ventilation or home oxygen therapy prior to admission</label>
+    </div>
+    <div class="excl-item">
+      <input type="checkbox" id="ex9" onchange="updateStep2Live()">
+      <label for="ex9"><span class="num">9.</span> Receiving, or decision to commence, ECMO in the next 24 hours</label>
     </div>
   </div>
 
-  <div class="card">
-    <h2>Participant information video</h2>
-    <p>The trial team's animated explainer used to talk participants (or their consultee) through the study during consent. Useful for staff to review too, so you know what patients/families have already seen.</p>
-    <a class="btn-link" href="https://www.explainmytrial.com/release/procedure/release-english/" target="_blank" rel="noopener noreferrer">Watch on ExplainMyTrial &rarr;</a>
+  </div><!-- /step2 -->
+
+  <div class="btn-row">
+    <button onclick="checkEligibility()">Check eligibility &darr;</button>
+    <button class="secondary" onclick="resetForm()">Reset all fields</button>
   </div>
 
-  <div class="card">
-    <h2>Screening</h2>
-    <p>Use the eligibility tool below to work through the RELEASE inclusion and exclusion criteria at the bedside, including a built-in P:F ratio calculator.</p>
-    <p><strong>Which PaO&#8322; to use:</strong> enter the standard PaO&#8322; reported by the analyser at 37&deg;C, not the temperature-corrected value. The conventional PaO&#8322;/FiO&#8322; thresholds used for ARDS classification and trial eligibility are based on the 37&deg;C analyser measurement. The temperature-corrected value is a calculated estimate adjusted to the patient&rsquo;s actual body temperature rather than a separate direct measurement, so using it could introduce temperature-dependent variation and move a patient across the eligibility threshold. Using the standard value keeps screening consistent across patients and sites.</p>
-    <a class="btn-link" href="eligibility-tool/">Open eligibility tool &rarr;</a>
-  </div>
+</div>
 
-  <div class="card">
-    <h2>More information</h2>
-    <p>Full protocol and study documents are held by the Warwick CTU study team. Contact the research team directly for anything not covered here.</p>
-    <a class="btn-link" href="https://warwick.ac.uk/fac/sci/med/research/ctu/trials/release/" target="_blank" rel="noopener noreferrer">Main trial site (Warwick CTU) &rarr;</a>
-  </div>
+<div id="result" class="wrap status-incomplete">
+  <h3 id="result-title">Enter values above to check eligibility</h3>
+  <div id="result-detail"></div>
 </div>
 
 <footer>
-  Page maintained by the local research team. Not a substitute for the trial protocol, Screening Log, or PI sign-off. Trial summary drawn from the public Warwick CTU and King&rsquo;s College London project pages (accessed 1 Aug 2026) &mdash; verify against RELEASE Protocol V3.0 (26 Mar 2025) for anything used in patient screening or consent.
+  Based on RELEASE Domain Protocol V3.0 (26 Mar 2025), section 2.5 (pages 17&ndash;18) &mdash; inclusion criteria 2.5.1, exclusion criteria 2.5.2.
+  Verify against the currently approved protocol version before use &mdash; criteria may change with amendments. This tool is a local team reference aid,
+  not affiliated with or validated by Warwick Clinical Trials Unit. Report any suspected discrepancy to your local trial team before relying on it.
 </footer>
+
+<script>
+function num(id){
+  const v = document.getElementById(id).value;
+  return v === "" ? null : parseFloat(v);
+}
+function checked(id){
+  return document.getElementById(id).checked;
+}
+function setDot(id, state){
+  const el = document.getElementById(id);
+  el.classList.remove('pass','fail');
+  if(state === true) el.classList.add('pass');
+  else if(state === false) el.classList.add('fail');
+}
+function setCriterion(dotId, cardId, msgId, state, passText, failText, pendingText){
+  setDot(dotId, state);
+  const card = document.getElementById(cardId);
+  const msg = document.getElementById(msgId);
+  card.classList.remove('pass','fail');
+  msg.classList.remove('pass','fail','pending');
+  if(state === true){
+    card.classList.add('pass');
+    msg.classList.add('pass');
+    msg.textContent = '✓ ' + passText;
+  } else if(state === false){
+    msg.classList.add('fail');
+    msg.textContent = '✗ ' + failText + '.';
+  } else {
+    msg.classList.add('pending');
+    msg.textContent = pendingText;
+  }
+}
+
+function setYesNo(prefix, val){
+  document.getElementById(prefix + 'Val').value = val ? 'y' : 'n';
+  document.getElementById(prefix + 'BtnY').classList.toggle('active', val === true);
+  document.getElementById(prefix + 'BtnN').classList.toggle('active', val === false);
+  runScreening();
+}
+function yesNoVal(prefix){
+  const v = document.getElementById(prefix + 'Val').value;
+  return v === 'y' ? true : (v === 'n' ? false : null);
+}
+
+function hoursSinceImvStart(){
+  const dateStr = document.getElementById('imvDate').value;
+  const timeStr = document.getElementById('imvTime').value;
+  if(!dateStr || !timeStr) return null;
+  const started = new Date(dateStr + 'T' + timeStr);
+  if(isNaN(started.getTime())) return null;
+  const diffHours = (Date.now() - started.getTime()) / (1000 * 60 * 60);
+  return diffHours;
+}
+
+function setSub(id, state, text){
+  const el = document.getElementById(id);
+  el.classList.remove('pass','fail','pending');
+  el.classList.add(state === true ? 'pass' : (state === false ? 'fail' : 'pending'));
+  el.textContent = (state === true ? '✓ ' : state === false ? '✗ ' : '') + text;
+}
+
+// Live, per-field feedback only — updates the individual criterion checkmarks,
+// P:F/FiO2/hours read-outs, and the auto-derived exclusion checkboxes.
+// Does NOT touch the colored verdict (gate cards / #result) — that only
+// changes when checkEligibility() is explicitly run.
+function updateCriteria(){
+  // ---- Inclusion 1: age ----
+  const age = num('age');
+  const ind1 = age === null ? null : age >= 18;
+  setCriterion('ind1-dot', 'card-ind1', 'ind1-msg', ind1,
+    'Meets criterion (adult)', 'Does not meet criterion (age <18)', 'Enter age to check');
+
+  // ---- Inclusion 2: receiving IMV ----
+  const imv = yesNoVal('imv');
+  setCriterion('ind2-dot', 'card-ind2', 'ind2-msg', imv,
+    'Meets criterion (receiving IMV)', 'Does not meet criterion (not receiving IMV)', 'Select Yes/No to check');
+
+  // ---- Inclusion 3: P:F ratio ----
+  const pao2 = num('pao2');
+  const fio2 = num('fio2');
+  const peep = num('peep');
+  const hoursRaw = hoursSinceImvStart();
+  const hoursFuture = hoursRaw !== null && hoursRaw < 0;
+  const hours = hoursFuture ? null : hoursRaw;
+
+  // Hours-since-intubation read-out (not editable)
+  const imvHoursEl = document.getElementById('imvHours');
+  if(hoursRaw === null){
+    imvHoursEl.value = '';
+  } else if(hoursFuture){
+    imvHoursEl.value = 'future date/time';
+  } else {
+    imvHoursEl.value = hoursRaw.toFixed(1) + 'h';
+  }
+
+  // FiO₂ fraction read-out (staff learning aid — not editable)
+  const fio2FractionEl = document.getElementById('fio2Fraction');
+  fio2FractionEl.value = fio2 !== null ? (fio2 / 100).toFixed(2) : '';
+
+  let ratioKpa = null;
+  if(pao2 !== null && fio2 !== null && fio2 > 0){
+    ratioKpa = pao2 / (fio2 / 100);
+  }
+  const pfValueEl = document.getElementById('pf-value');
+  if(ratioKpa !== null){
+    pfValueEl.innerHTML = 'P:F ratio: <span class="big">' + ratioKpa.toFixed(1) + ' kPa</span>';
+  } else {
+    pfValueEl.textContent = 'Enter PaO₂ and % oxygen administered to calculate the P:F ratio.';
+  }
+
+  const ratioMet = ratioKpa === null ? null : ratioKpa < 20;
+  setSub('pf-check-ratio', ratioMet, ratioKpa === null ? 'P:F ratio <20 kPa (enter PaO₂ and FiO₂)' :
+    'P:F ratio ' + ratioKpa.toFixed(1) + ' kPa ' + (ratioMet ? '(<20 kPa)' : '(not <20 kPa)'));
+
+  const peepMet = peep === null ? null : peep >= 5;
+  setSub('pf-check-peep', peepMet, peep === null ? 'PEEP ≥5 cmH₂O (enter PEEP)' :
+    'PEEP ' + peep + ' cmH₂O ' + (peepMet ? '(≥5)' : '(<5 — required PEEP not met)'));
+
+  const timingMet = hours === null ? null : hours <= 60;
+  if(hoursFuture){
+    setSub('pf-check-timing', null, 'IMV start date/time is in the future — check entry');
+  } else {
+    setSub('pf-check-timing', timingMet, hours === null ? 'Measured within 60h of IMV start (enter IMV start date and time)' :
+      hours.toFixed(1) + ' hours since IMV start ' + (timingMet ? '(≤60h)' : '(>60h — outside eligibility window)'));
+  }
+
+  let ind3 = null;
+  if(ratioMet !== null && peepMet !== null && timingMet !== null){
+    ind3 = (ratioMet && peepMet && timingMet);
+  }
+  setCriterion('ind3-dot', 'card-ind3', 'ind3-msg', ind3,
+    'Meets criterion (P:F <20 kPa, PEEP ≥5, within 60h of IMV start)',
+    'Does not meet criterion (P:F ratio, PEEP, and/or timing not satisfied)',
+    'Enter PaO₂, FiO₂, PEEP and IMV start date/time to check');
+
+  // ---- Inclusion 4: expected >48h ----
+  const exp = yesNoVal('exp');
+  setCriterion('ind4-dot', 'card-ind4', 'ind4-msg', exp,
+    'Meets criterion (expected IMV >48h)', 'Does not meet criterion (not expected to need IMV >48h)', 'Select Yes/No to check');
+
+  // ---- Auto-derived exclusion checkboxes (bookkeeping only, not a verdict) ----
+  const ex1 = hours !== null ? hours >= 60 : null;
+  document.getElementById('ex1').checked = !!ex1;
+  const ph = num('ph');
+  const ex4 = ph !== null ? ph < 7.20 : null;
+  document.getElementById('ex4').checked = !!ex4;
+  const ex2Sub = ['ex2a','ex2b','ex2c','ex2d'].some(id => checked(id));
+  document.getElementById('ex2').checked = ex2Sub;
+
+  return { ind1, imv, ind3, exp, hours, ph, ex1, ex4 };
+}
+
+function setResult(statusClass, title, detailHtml){
+  const resultEl0 = document.getElementById('result');
+  const titleEl0 = document.getElementById('result-title');
+  const detailEl0 = document.getElementById('result-detail');
+  resultEl0.classList.remove('status-eligible','status-ineligible','status-incomplete');
+  resultEl0.classList.add(statusClass);
+  titleEl0.textContent = title;
+  detailEl0.innerHTML = detailHtml;
+}
+
+// Called by every STEP 1 field (age, IMV, PaO2/FiO2/PEEP/IMV start, expected>48h).
+// Editing any of these after a check invalidates it — collapses back to step 1
+// and resets the verdict to neutral, so it can never show a stale green/red.
+function runScreening(){
+  const c = updateCriteria();
+  step2Opened = false;
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('gate-ineligible').style.display = 'none';
+  document.getElementById('gate-complete').style.display = 'none';
+  document.getElementById('gate-incomplete').style.display = 'block';
+  const allTouched = (c.ind1 !== null || c.imv !== null || c.ind3 !== null || c.exp !== null);
+  document.getElementById('gate-incomplete-text').textContent = allTouched
+    ? 'Values entered/changed — press "Check eligibility" to see the current result.'
+    : 'Complete the four inclusion criteria above, then press "Check eligibility".';
+  setResult('status-incomplete',
+    allTouched ? 'Not yet checked — press "Check eligibility" above' : 'Enter values above, then press "Check eligibility"',
+    '');
+}
+
+// Called by STEP 2 fields (pH, exclusion checkboxes) — keeps the checklist and
+// step 2 visible (no point re-hiding it every tick), just clears the verdict
+// back to neutral until "Check eligibility" is pressed again.
+function updateStep2Live(){
+  updateCriteria();
+  setResult('status-incomplete', 'Values changed — press "Check eligibility" to update the result.', '');
+}
+
+// Explicit verdict — only this function is allowed to show green/red.
+function checkEligibility(){
+  const c = updateCriteria();
+  const { ind1, imv, ind3, exp, hours, ph, ex1, ex4 } = c;
+
+  const inclusionComplete = (ind1 === true && imv === true && ind3 === true && exp === true);
+  const inclusionFailed = (ind1 === false || imv === false || ind3 === false || exp === false);
+  const step2El = document.getElementById('step2');
+  const gateIncompleteEl = document.getElementById('gate-incomplete');
+  const gateIneligibleEl = document.getElementById('gate-ineligible');
+  const gateIneligibleTextEl = document.getElementById('gate-ineligible-text');
+  const gateCompleteEl = document.getElementById('gate-complete');
+
+  if(inclusionFailed){
+    step2Opened = false;
+    step2El.style.display = 'none';
+    gateIncompleteEl.style.display = 'none';
+    gateCompleteEl.style.display = 'none';
+    gateIneligibleEl.style.display = 'block';
+    let reasons = [];
+    if(ind1 === false) reasons.push('age &lt;18');
+    if(imv === false) reasons.push('not receiving IMV');
+    if(ind3 === false) reasons.push('P:F ratio / PEEP / timing criteria not met');
+    if(exp === false) reasons.push('not expected to remain on IMV &gt;48h');
+    gateIneligibleTextEl.innerHTML = '<strong>Not eligible &mdash; inclusion criteria not met</strong> (' + reasons.join('; ') + '). Exclusion criteria are not applicable; screening stops here.';
+    setResult('status-ineligible', 'Currently NOT ELIGIBLE — inclusion criteria not met',
+      '<ul>' + reasons.map(r => `<li>${r.charAt(0).toUpperCase()+r.slice(1)}</li>`).join('') + '</ul>');
+    return;
+  }
+
+  gateIneligibleEl.style.display = 'none';
+
+  if(!inclusionComplete){
+    step2Opened = false;
+    step2El.style.display = 'none';
+    gateCompleteEl.style.display = 'none';
+    gateIncompleteEl.style.display = 'block';
+    document.getElementById('gate-incomplete-text').textContent = 'Complete the four inclusion criteria above, then press "Check eligibility".';
+    setResult('status-incomplete', 'Step 1 in progress — enter remaining inclusion values', '');
+    return;
+  }
+
+  gateIncompleteEl.style.display = 'none';
+
+  if(!step2Opened){
+    step2El.style.display = 'none';
+    gateCompleteEl.style.display = 'block';
+    setResult('status-eligible', 'Meets inclusion criteria — POTENTIALLY ELIGIBLE (exclusion criteria not yet checked)',
+      '<p style="font-size:0.85rem;">Click "Continue to exclusion criteria" below to complete screening.</p>');
+    return;
+  }
+
+  // step2Opened is true — show exclusion criteria and compute the full result
+  gateCompleteEl.style.display = 'none';
+  step2El.style.display = 'block';
+
+  const manualExclIds = ['ex3','ex5','ex6','ex7','ex8','ex9'];
+  const manualExclLabels = {
+    ex3:'Refractory shock (SBP <90 mmHg despite fluids/vasoactive drugs)',
+    ex5:'Ongoing air leak (e.g. unresolved pneumothorax)',
+    ex6:'Traumatic brain injury with uncontrolled intracranial hypertension',
+    ex7:'Likely death or treatment withdrawal in next 24 hours',
+    ex8:'Home ventilation or home oxygen therapy prior to admission',
+    ex9:'Receiving, or decision to commence, ECMO in next 24 hours'
+  };
+  const ex2Labels = {
+    ex2a:'Primary reason for IMV: Asthma', ex2b:'Primary reason for IMV: Severe COPD',
+    ex2c:'Primary reason for IMV: Pulmonary embolism (massive/sub-massive)',
+    ex2d:'Primary reason for IMV: Existing neuromuscular disease'
+  };
+
+  const activeManual = manualExclIds.filter(id => checked(id)).map(id => manualExclLabels[id]);
+  const activeEx2 = ['ex2a','ex2b','ex2c','ex2d'].filter(id => checked(id)).map(id => ex2Labels[id]);
+  const activeAuto = [];
+  if(ex1) activeAuto.push('Receiving IMV ≥60 hours at time of screening');
+  if(ex4) activeAuto.push('Severe hypercapnic respiratory acidosis (pH ' + ph + ' <7.20)');
+
+  const allActive = activeManual.concat(activeEx2, activeAuto);
+
+  if(allActive.length > 0){
+    let html = '<ul>' + allActive.map(e => `<li>${e}</li>`).join('') + '</ul>';
+    const resolvableTriggered = activeManual.some(l => l.startsWith('Refractory shock') || l.startsWith('Ongoing air leak') || l.startsWith('Traumatic brain injury')) ||
+      activeAuto.some(l => l.startsWith('Severe hypercapnic'));
+    if(resolvableTriggered){
+      html += '<p style="font-size:0.82rem;">Some of these criteria may resolve (protocol section 2.5.2 footnote) — the patient may be reconsidered if resolved and still within the eligibility window (&lt;60h of IMV).</p>';
+    }
+    setResult('status-ineligible', 'Currently NOT ELIGIBLE — exclusion criteria present', html);
+    return;
+  }
+
+  setResult('status-eligible', 'Meets inclusion criteria, no exclusions ticked — POTENTIALLY ELIGIBLE',
+    '<div class="advisory">' +
+    '<p style="font-weight:600; margin:10px 0 6px 0;">If proceeding:</p>' +
+    '<ul>' +
+    '<li>Confirm eligibility and obtain consent/consultee agreement per protocol section 2.7.</li>' +
+    '<li>Randomise via the trial\'s web-based randomisation system before starting either study arm.</li>' +
+    '<li>Document the screening/eligibility assessment in the medical notes and the trial Screening Log.</li>' +
+    '<li>Confirm that whoever is consenting/randomising is GCP trained and on the site delegation log.</li>' +
+    '</ul>' +
+    '<button type="button" class="secondary" onclick="alertResearchTeam()">Alert research team by email</button>' +
+    '<span class="hint" style="display:block; margin-top:6px;">Opens your email client with the research team pre-addressed. No patient-identifiable details are pre-filled — add them yourself before sending.</span>' +
+    '</div>');
+}
+
+function alertResearchTeam(){
+  const to = ['m.lukose','eleanor.higgs'].map(u => u + '@' + ['nhs','net'].join('.')).join(',');
+  const subject = 'RELEASE — potentially eligible patient identified';
+  const body = 'A potentially eligible patient for RELEASE has been screened as meeting inclusion criteria with no exclusions ticked on the local eligibility aid.\n\n' +
+    'Please attend to review and, if appropriate, support consent and randomisation.\n\n' +
+    '[Add patient identifiers / location here]\n\n' +
+    '(This message was generated by the local eligibility aid and deliberately contains no patient-identifiable details.)';
+  window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+}
+
+let step2Opened = false;
+
+function continueToStep2(){
+  step2Opened = true;
+  document.getElementById('gate-complete').style.display = 'none';
+  document.getElementById('step2').style.display = 'block';
+  updateCriteria();
+  setResult('status-incomplete', 'Press "Check eligibility" below to complete screening.', '');
+  document.getElementById('step2').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function backToStep1(){
+  step2Opened = false;
+  document.getElementById('step2').style.display = 'none';
+  updateCriteria();
+  document.getElementById('gate-incomplete').style.display = 'none';
+  document.getElementById('gate-ineligible').style.display = 'none';
+  document.getElementById('gate-complete').style.display = 'block';
+  setResult('status-incomplete', 'Not yet checked — press "Check eligibility" above', '');
+  document.getElementById('step1').scrollIntoView({behavior:'smooth'});
+}
+
+function resetForm(){
+  step2Opened = false;
+  document.querySelectorAll('input[type=number]').forEach(el => el.value = '');
+  document.querySelectorAll('input[type=checkbox]:not([disabled])').forEach(el => el.checked = false);
+  document.getElementById('imvDate').value = '';
+  document.getElementById('imvTime').value = '';
+  document.getElementById('imvVal').value = '';
+  document.getElementById('expVal').value = '';
+  document.getElementById('imvBtnY').classList.remove('active');
+  document.getElementById('imvBtnN').classList.remove('active');
+  document.getElementById('expBtnY').classList.remove('active');
+  document.getElementById('expBtnN').classList.remove('active');
+  document.getElementById('step2').style.display = 'none';
+  runScreening();
+}
+
+runScreening();
+setInterval(updateCriteria, 60000); // keep elapsed-hours-since-IMV ticking without disturbing a confirmed check
+</script>
 
 </body>
 </html>
