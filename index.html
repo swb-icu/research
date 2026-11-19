@@ -157,23 +157,12 @@
   <!-- INCLUSION 3: P:F RATIO -->
   <div class="card" id="card-ind3">
     <h2><span class="criterion-status" id="ind3-dot">3</span> Moderate&ndash;severe AHRF (P:F ratio calculator)</h2>
-    <p class="sub">Inclusion criterion 3: single measurement showing PaO&#8322;/FiO&#8322; ratio &lt;20 kPa while on PEEP &ge;5 cmH&#8322;O, assessed at any point within the first 60 hours after IMV initiation</p>
-
-    <div class="note-box" style="background:var(--amber-bg); border-color:#e0c46a; color:var(--text);">
-      <strong>Enter the standard PaO&#8322; at 37&deg;C, NOT the temperature-corrected value.</strong>
-      <ul style="margin:8px 0 8px 18px; padding:0; line-height:1.5;">
-        <li><strong>Use:</strong> the PaO&#8322; as measured by the analyser at 37&deg;C. This is usually the main pO&#8322; value on the blood gas printout.</li>
-        <li><strong>Do not use:</strong> the value corrected to the patient&rsquo;s temperature. Many analysers print it separately, often labelled &ldquo;pO&#8322;(T)&rdquo;, &ldquo;corrected&rdquo; or &ldquo;at patient temperature&rdquo;. Ignore it, including in febrile or hypothermic patients.</li>
-        <li>If you cannot tell which value is which, check with the research team before entering it.</li>
-      </ul>
-      <strong>Why:</strong> the PaO&#8322;/FiO&#8322; thresholds used for ARDS classification and trial eligibility are based on the analyser value at 37&deg;C. The temperature-corrected value is a calculated estimate, not a separate measurement, so using it adds temperature-dependent variation. For example, a febrile patient&rsquo;s corrected PaO&#8322; reads higher than the 37&deg;C value, which could lift the P:F ratio over 20 kPa and wrongly rule them out (the reverse applies in hypothermia). Using the standard value keeps screening consistent across patients and sites.
-    </div>
+    <p class="sub">Inclusion criterion 3: single measurement showing PaO&#8322;/FiO&#8322; ratio &lt;20 kPa (non-temperature corrected) while on PEEP &ge;5 cmH&#8322;O, assessed at any point within the first 60 hours after IMV initiation</p>
 
     <div class="row">
       <div class="field">
-        <label for="pao2">PaO&#8322; (kPa)</label>
+        <label for="pao2">PaO&#8322; (kPa), non-temperature corrected</label>
         <input type="number" id="pao2" step="0.1" placeholder="e.g. 9.5" oninput="runScreening()" onchange="runScreening()" onkeyup="runScreening()">
-        <span class="hint"><strong>Standard analyser value at 37&deg;C.</strong> Not pO&#8322;(T) / temperature-corrected.</span>
       </div>
       <div class="field">
         <label for="ph">Arterial pH</label>
